@@ -15,7 +15,7 @@ use think\Log;
  * @icon   fa fa-circle-o
  * @remark 主要用于展示OTC收款账户
  */
-class Account extends Backend
+class Bank extends Backend
 {
 
     /**
