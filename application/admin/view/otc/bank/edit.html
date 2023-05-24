@@ -1,7 +1,7 @@
 <form id="edit-form" class="form-horizontal form-ajax" role="form" data-toggle="validator" method="POST" action="">
     {:token()}
     <div class="form-group">
-        <label for="account_name" class="control-label col-xs-12 col-sm-2">户主:</label>
+        <label for="account_name" class="control-label col-xs-12 col-sm-2">账户名:</label>
         <div class="col-xs-12 col-sm-8">
             <input type="text" class="form-control" id="account_name" name="row[account_name]" value="{$row.account_name}" data-rule="required" />
         </div>
@@ -13,7 +13,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="ifsc" class="control-label col-xs-12 col-sm-2">IFSC:</label>
+        <label for="ifsc" class="control-label col-xs-12 col-sm-2">账户名:</label>
         <div class="col-xs-12 col-sm-8">
             <input type="text" class="form-control" id="ifsc" name="row[ifsc]" placeholder="" value="{$row.ifsc}" data-rule="required" />
         </div>

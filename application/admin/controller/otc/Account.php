@@ -10,10 +10,10 @@ use fast\Http;
 use think\Log;
 
 /**
- * OTC收款账户
+ * 轉數快
  *
  * @icon   fa fa-circle-o
- * @remark 主要用于展示OTC收款账户
+ * @remark 主要用于展示轉數快收款账户
  */
 class Account extends Backend
 {
@@ -79,13 +79,13 @@ class Account extends Backend
             \think\Request::instance()->get(['filter' => json_encode($filter)]);
 
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
-
             $list = $model
                 ->alias('a')
                 ->where($groupwhere)
                 ->where($timewhere)
                 ->where($statuswhere)
                 ->where($where)
+                ->where('a.type',$this->type)
                 ->join('channel_list b','a.channel_id = b.id','LEFT')
                 ->field($field)
                 ->order($sort, $order)

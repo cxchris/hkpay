@@ -12,8 +12,8 @@ class Collection extends Validate
      */
     // |unique:channel_list
     protected $rule = [
-        'channel_name' => 'require|regex:\w{3,30}',
-        'channel_en_name' => 'require|regex:\w{3,30}',
+        'channel_name' => 'require|max:64',
+        'channel_en_name' => 'require|max:64',
         'channel_sign' => 'require|max:64',
         'low_money' => 'require|between:0,5000',
         'high_money' => 'require|between:0,100000',

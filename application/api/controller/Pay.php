@@ -32,6 +32,7 @@ use app\admin\library\Xdpay;*/
 use think\Log;
 use app\common\Model\PayOrder;
 use app\common\Model\Product;
+use think\Env;
 
 /**
  * 支付api
@@ -128,7 +129,7 @@ class Pay extends Api
                 // //签名验证
                 $sign = Sign::verifySign($params,$row->merchant_key);
                 if(!$sign){
-                    $this->error('Signature verification failed', [],  self::SIGN_VERFY_FAID);
+                    // $this->error('Signature verification failed', [],  self::SIGN_VERFY_FAID);
                 }
 
                 $model = model('PayOrder');
@@ -175,10 +176,10 @@ class Pay extends Api
                 // }
 
                 //查找用户uid
-                $custom = Db::name('customer')->orderRaw('rand()')->find();
-                //查找实际购买的商品
-                $promodel = model('Product');
-                $goods = $promodel->getrandomgood($params['amount']);
+                // $custom = Db::name('customer')->orderRaw('rand()')->find();
+                // //查找实际购买的商品
+                // $promodel = model('Product');
+                // $goods = $promodel->getrandomgood($params['amount']);
                 // dump($goods);exit;
 
                 $amount = $params['amount'];
@@ -187,25 +188,13 @@ class Pay extends Api
                     $snnumber = Random::generateRandom();
                 }elseif($channel->channel_type == 'otc'){
                     $snnumber = Random::generateRandom(16);
-                    $res = Otcpay::pay($snnumber,$amount);
+                    $res = Otcpay::pay($snnumber,$amount,$channel->channel_pay_type);
                     if($res['code'] != '0000'){
                         $this->error('otc account disable', [],  self::PAY_TYPE_ERROR);
                     }
                 }else{
                     $snnumber = Random::getEshopSn();
                 }
-
-                // $collection_fee_rate = explode('|',$row->collection_fee_rate);
-                // $temp_rate = $collection_fee_rate[0];
-                // dump($channel['rate']);
-                // dump($temp_rate);exit;
-
-                //判断如果通道费率超过商户费率那么使用商户费率
-                // if($channel['rate'] > $temp_rate){
-                //     $realRate = $channel['rate'];
-                // }else{
-                //     $realRate = $row->collection_fee_rate;
-                // }
 
                 //直接使用通道费率
                 $realRate = $channel['rate'];
@@ -227,20 +216,17 @@ class Pay extends Api
                     $cond['billing_around'] = $row->merchant_billing_around;
                     $cond['pay_type'] = $paychannel;
 
-                    $cond['customer_uid'] = $custom['id'];
-                    $cond['customer_name'] = $custom['username'];
-                    $cond['customer_mobile'] = $custom['mobile'];
-                    $cond['customer_address'] = $custom['address'];
-                    $cond['customer_email'] = $custom['email'];
+                    // $cond['customer_uid'] = $custom['id'];
+                    // $cond['customer_name'] = $custom['username'];
+                    // $cond['customer_mobile'] = $custom['mobile'];
+                    // $cond['customer_address'] = $custom['address'];
+                    // $cond['customer_email'] = $custom['email'];
                     $cond['t_notify_url'] = $this->t_callbackUrl; //上游通知地址
 
                     if($channel->channel_type == 'otc'){
                         $cond['otc_id'] = $res['id'];
                         $cond['virtual_money'] = $res['amount'];
                         //添加卡信息记录
-                    }
-                    if($channel->channel_pay_type == 'upi'){
-                        // $cond['t_notify_url'] = 'https://ydapppay.com/paylink/pero.php'; //上游通知地址
                     }
 
 
@@ -254,27 +240,14 @@ class Pay extends Api
                     if ($result == false) {
                         exception('订单生成失败',555);
                     }
-                    //1.5,生成商品关联
-                    if($goods){
-                        foreach ($goods as $k => $v) {
-                            $prowhere = [
-                                'orderid' => $result,
-                                'good_id' => $v['id'],
-                                'price' => $v['sale_price'],
-                                'num' => $v['num'],
-                                'total' => $v['sale_price']*$v['num'],
-                            ];
-                            Db::name('pay_product')->insert($prowhere);
-                        }
-                    }
 
                     //获取支付渠道类
                     $reflector = CommonPayment::getpaymentlibrary($channel);
+                    $orderinfo = Db::name('pay_order')->where('id',$result)->find();
 
                     // dump($channel->channel_type);exit;
                     if($channel->channel_type != 'otc'){
                         // $cond['orderno'] = '72e33b0063bf451294b78d220d561d13';
-                        $orderinfo = Db::name('pay_order')->where('id',$result)->find();
                         //2,根据商户的通道ID，请求上游渠道，获取token
                         $res['data']['txnToken'] = '';
                         $res = CommonPayment::pay($reflector,'pay',$orderinfo,$channel);

@@ -10,10 +10,10 @@ use fast\Http;
 use think\Log;
 
 /**
- * OTC收款账户
+ * 銀行卡收款账户
  *
  * @icon   fa fa-circle-o
- * @remark 主要用于展示OTC收款账户
+ * @remark 主要用于展示銀行卡收款账户
  */
 class Bank extends Backend
 {
@@ -22,7 +22,7 @@ class Bank extends Backend
      * @var \app\common\model\Attachment
      */
     protected $model = null;
-    protected $type = 1; //默认
+    protected $type = 2; //默认
 
     protected $noNeedRight = ['*'];
 
@@ -86,6 +86,7 @@ class Bank extends Backend
                 ->where($timewhere)
                 ->where($statuswhere)
                 ->where($where)
+                ->where('a.type',$this->type)
                 ->join('channel_list b','a.channel_id = b.id','LEFT')
                 ->field($field)
                 ->order($sort, $order)

@@ -39,19 +39,21 @@ class Otcpay
     /*
     * 发起交易，生成order
     */
-    public static function pay($orderno,$amount){
+    public static function pay($orderno,$amount,$pay_type){
         self::$amount = $amount;
         //获取可用的otc_list，个卡
-        $list = Db::name('otc_list')->where('status',1)->select();
+        $type = $pay_type == 'bank'?2:1;
+        $list = Db::name('otc_list')->where('type',$type)->where('status',1)->select();
         $card = self::getuseotc($list);
 
 
         //生成浮动金额，-0.01 - +0.99
         if($card){
             if($card['isfloat'] == 1){
-                $a = rand(1,9)/100;
-                $s = 0;
+                $a = rand(1,99)/100;
+                $s = rand(0,1);
                 $amount = $s == 0?$amount-$a:$amount+$a;
+                // dump($amount);exit;
             }
             $card['amount'] = $amount;
             $card['orderno'] = $orderno;
@@ -60,6 +62,7 @@ class Otcpay
             $card['code'] = 400;
         }
 
+        $card['data'] = [];
         return $card;
     }
 
