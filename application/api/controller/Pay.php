@@ -197,7 +197,8 @@ class Pay extends Api
                 }
 
                 //直接使用通道费率
-                $realRate = $channel['rate'];
+                $realRate = $row->collection_fee_rate;
+                // dump($realRate);exit;
 
                 //判断
                 Db::startTrans();
@@ -210,7 +211,7 @@ class Pay extends Api
                     $cond['eshopno'] = $snnumber;
                     $cond['out_trade_no'] = $params['merchantSn'];
                     $cond['money'] = $amount;
-                    $cond['rate_money'] = $this->getrate($amount,$realRate,'+');
+                    $cond['rate_money'] = $this->getrate($amount,$realRate,'|');
                     $cond['collection_fee_rate'] = $realRate;
                     $cond['account_money'] = $amount - $cond['rate_money'];
                     $cond['billing_around'] = $row->merchant_billing_around;
@@ -226,6 +227,7 @@ class Pay extends Api
                     if($channel->channel_type == 'otc'){
                         $cond['otc_id'] = $res['id'];
                         $cond['virtual_money'] = $res['amount'];
+                        $data['rate_t_money'] = $this->getrate($amount,$channel['rate'],'+');
                         //添加卡信息记录
                     }
 

@@ -91,7 +91,7 @@ class Upnotice extends Api
                             ->join('channel_list b','a.channel_id = b.id','LEFT')
                             ->join('merchant c','a.merchant_number = c.merchant_number','LEFT')
                             ->where($where)
-                            ->field('a.*,b.channel_key,c.merchant_key')
+                            ->field('a.*,b.channel_key,c.merchant_key,b.channel_type,c.merchant_billing_around')
                             ->find();
                 // Db::name('pay_order')->where(['id'=>36218])->update(['create_time'=>time()]);
                 // echo Db::name('pay_order')->getlastsql();
@@ -110,37 +110,43 @@ class Upnotice extends Api
                 //3,修改订单状态，存入上游订单号
                 Db::name('pay_order')->where(['id'=>$order['id']])->update($data);
 
+                $model = model('PayOrder');
+                //判断如果是DO商户且交易成功的状态，就结算
+                if($data['status'] == 1 && $order['merchant_billing_around'] == 'd0'){
+                    $model->check_pay_order($order);
+                }
+
                 // $model = model('PayOrder');
                 // //4,交易成功，则回调给下游
-                // if($order['notify_url']){
-                //     $cond = $model->getCondItem($order,$data['status']);
+                if($order['notify_url']){
+                    $cond = $model->getCondItem($order,$data['status']);
 
-                //     try {
-                //         $res = Http::post($order['notify_url'], $cond, $options = []);
-                //         Log::record('notify:通知参数'.json_encode($cond),'notice');
-                //         Log::record('notify:通知回答'.json_encode($res),'notice');
-                //         if(!$res){
-                //             $model->update_pay_order($order['id'],2);
-                //             exception('通知失败');
-                //         }
-                //     } catch (\Exception $e) {
-                //         Log::record('notify:通知失败'.$order['orderno'],'notice');
-                //         // $this->error($e->getMessage());
-                //     }
+                    try {
+                        $res = Http::post($order['notify_url'], $cond, $options = []);
+                        Log::record('notify:通知参数'.json_encode($cond),'notice');
+                        Log::record('notify:通知回答'.json_encode($res),'notice');
+                        if(!$res){
+                            $model->update_pay_order($order['id'],2);
+                            exception('通知失败');
+                        }
+                    } catch (\Exception $e) {
+                        Log::record('notify:通知失败'.$order['orderno'],'notice');
+                        // $this->error($e->getMessage());
+                    }
 
-                //     if($res){
-                //         if($res == 'success'){
-                //             $model->update_pay_order($order['id'],1);
-                //             Log::record('notify:通知成功'.$order['orderno'],'notice');
-                //         }else{
-                //             $model->update_pay_order($order['id'],2);
-                //             Log::record('notify:通知失败'.$order['orderno'],'notice');
-                //         }
-                //     }else{
-                //         $model->update_pay_order($order['id'],2);
-                //         Log::record('notify:通知失败'.$order['orderno'],'notice');
-                //     }
-                // }
+                    if($res){
+                        if($res == 'success'){
+                            $model->update_pay_order($order['id'],1);
+                            Log::record('notify:通知成功'.$order['orderno'],'notice');
+                        }else{
+                            $model->update_pay_order($order['id'],2);
+                            Log::record('notify:通知失败'.$order['orderno'],'notice');
+                        }
+                    }else{
+                        $model->update_pay_order($order['id'],2);
+                        Log::record('notify:通知失败'.$order['orderno'],'notice');
+                    }
+                }
 
                 $this->success('订单处理完成');
             }else{
