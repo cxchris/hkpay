@@ -59,7 +59,7 @@ class Upnotice extends Api
             // $params = json_decode($params,true);
             Log::record('个卡回调callback:POST:'.json_encode($params),'notice');
             if ($params) {
-                $end_time = time()+10;
+                $end_time = time();
                 $start_time = time() - 10*60;
                 //签名验证
                 $sign = Sign::verifySign($params,$this->key);
@@ -103,7 +103,7 @@ class Upnotice extends Api
 
                 //判断
                 $data = [];
-                $data['status'] = 3;
+                $data['status'] = 1;
                 // $data['utr'] = $params['utr'];
                 $data['callback_time'] = $end_time;
 
