@@ -219,6 +219,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'money', title: '交易金额',operate:false},
                             {field: 'virtual_money', title: '优惠金额',operate:false},
                             {field: 'rate_money', title: '代收手续费（百分比+每笔）',operate:false},
+                            {field: 'rate_t_money', title: '三方手续费',operate:false},
                             {field: 'account_money', title: '到账金额',operate:false},
                             {field: 'billing_around', title: '结算周期',operate:false},
                             {field: 'billing_time', title: '结算时间',  operate: 'RANGE', addclass: 'datetimerange', sortable: true,operate:false},
@@ -247,7 +248,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'update_time', title: '通知时间',operate:false},
                             {field: 'notify_url', title: '异步通知地址',operate:false},
                             {field: 'request_ip', title: '请求IP',operate:false},
-                            {field: 'rate_t_money', title: '三方手续费',operate:false},
                             {
                                 field: 'operate',title: '操作',table: table,
                                 events: Controller.api.events.operate, 
