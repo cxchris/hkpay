@@ -66,26 +66,26 @@ MIICXQIBAAKBgQDlOJu6TyygqxfWT7eLtGDwajtNFOb9I5XRb6khyfD1Yt3YiCgQWMNW649887VGJiGr
                 $start_time = time() - 10*60;
                 //签名认证
                 // //签名验证
-                $sign = Sign::setDecrypt($this->key,$params['sign']);
+                $sign = Sign::setDecrypt($this->key,$params['pkg']);
                 if(!$sign){
                     $this->error('Signature verification failed', [],  self::SIGN_VERFY_FAID);
                 }
 
-                if(!$params['money']){
-                    $this->error('money error', [],  self::SIGN_VERFY_FAID);
+                if(!$params['amount']){
+                    $this->error('amount error', [],  self::SIGN_VERFY_FAID);
                 }
-                $params['money'] = (float)trim($params['money']);
+                $params['amount'] = (float)trim($params['amount']);
 
-                if(!$params['utr']){
-                    $this->error('utr error', [],  self::SIGN_VERFY_FAID);
-                }
-                $params['utr'] = trim($params['utr']);
+                // if(!$params['utr']){
+                //     $this->error('utr error', [],  self::SIGN_VERFY_FAID);
+                // }
+                // $params['utr'] = trim($params['utr']);
 
                 $where = [
                     'a.virtual_money'=>$params['money'],
                     'a.status' => 3,
                     'a.create_time' => ['between',[$start_time,$end_time]], //十分钟以内
-                    'a.utr' => ''
+                    // 'a.utr' => ''
                 ];
 
                 // Db::name('pay_order')->where(['id'=>36218])->update(['create_time'=>time()]);
@@ -108,7 +108,7 @@ MIICXQIBAAKBgQDlOJu6TyygqxfWT7eLtGDwajtNFOb9I5XRb6khyfD1Yt3YiCgQWMNW649887VGJiGr
                 //判断
                 $data = [];
                 $data['status'] = 4;
-                $data['utr'] = $params['utr'];
+                // $data['utr'] = $params['utr'];
                 $data['callback_time'] = $end_time;
 
                 //3,修改订单状态，存入上游订单号
