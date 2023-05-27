@@ -227,7 +227,7 @@ class Pay extends Api
                     if($channel->channel_type == 'otc'){
                         $cond['otc_id'] = $res['id'];
                         $cond['virtual_money'] = $res['amount'];
-                        $data['rate_t_money'] = $this->getrate($amount,$channel['rate'],'+');
+                        $cond['rate_t_money'] = $this->getrate($amount,$channel['rate'],'+');
                         //添加卡信息记录
                     }
 
