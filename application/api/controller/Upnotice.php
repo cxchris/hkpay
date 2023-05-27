@@ -103,7 +103,7 @@ class Upnotice extends Api
 
                 //判断
                 $data = [];
-                $data['status'] = 4;
+                $data['status'] = 3;
                 // $data['utr'] = $params['utr'];
                 $data['callback_time'] = $end_time;
 
