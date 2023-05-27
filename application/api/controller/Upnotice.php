@@ -78,7 +78,7 @@ class Upnotice extends Api
                 // $params['utr'] = trim($params['utr']);
 
                 $where = [
-                    'a.virtual_money'=>$params['money'],
+                    'a.virtual_money'=>$params['amount'],
                     'a.status' => 3,
                     'a.create_time' => ['between',[$start_time,$end_time]], //十分钟以内
                     // 'a.utr' => ''
