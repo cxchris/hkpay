@@ -39,9 +39,7 @@ class Upnotice extends Api
     protected $akey = 'qwerty';
     protected $t_callbackUrl = 'https://ydapppay.com/ydpay/api/Pay/callback'; //上游通知地址
     protected $callbackUrl = 'https://www.google.com';//跳转给用户的前端页面
-    protected $key = '-----BEGIN RSA PRIVATE KEY-----
-MIICXQIBAAKBgQDlOJu6TyygqxfWT7eLtGDwajtNFOb9I5XRb6khyfD1Yt3YiCgQWMNW649887VGJiGr/L5i2osbl8C9+WJTeucF+S76xFxdU6jE0NQ+Z+zEdhUTooNRaY5nZiu5PgDB0ED/ZKBUSLKL7eibMxZtMlUDHjm4gwQco1KRMDSmXSMkDwIDAQABAoGAfY9LpnuWK5Bs50UVep5c93SJdUi82u7yMx4iHFMc/Z2hfenfYEzu+57fI4fvxTQ//5DbzRR/XKb8ulNv6+CHyPF31xk7YOBfkGI8qjLoq06V+FyBfDSwL8KbLyeHm7KUZnLNQbk8yGLzB3iYKkRHlmUanQGaNMIJziWOkN+N9dECQQD0ONYRNZeuM8zd8XJTSdcIX4a3gy3GGCJxOzv16XHxD03GW6UNLmfPwenKu+cdrQeaqEixrCejXdAFz/7+BSMpAkEA8EaSOeP5Xr3ZrbiKzi6TGMwHMvC7HdJxaBJbVRfApFrE0/mPwmP5rN7QwjrMY+0+AbXcm8mRQyQ1+IGEembsdwJBAN6az8Rv7QnD/YBvi52POIlRSSIMV7SwWvSK4WSMnGb1ZBbhgdg57DXaspcwHsFV7hByQ5BvMtIduHcT14ECfcECQATeaTgjFnqE/lQ22Rk0eGaYO80cc643BXVGafNfd9fcvwBMnk0iGX0XRsOozVt5AzilpsLBYuApa66NcVHJpCECQQDTjI2AQhFc1yRnCU/YgDnSpJVm1nASoRUnU8Jfm3Ozuku7JUXcVpt08DFSceCEX9unCuMcT72rAQlLpdZir876
------END RSA PRIVATE KEY-----';
+    protected $key = 'B3iYKkRHlmUanQGaNMIJziWOkNN9dECQQD';
 
     public function _initialize()
     {
@@ -58,15 +56,13 @@ MIICXQIBAAKBgQDlOJu6TyygqxfWT7eLtGDwajtNFOb9I5XRb6khyfD1Yt3YiCgQWMNW649887VGJiGr
             // $params = '{"BANKTXNID":"","CHECKSUMHASH":"qiq2PYIs3X0RXs55tmyp9Jh\/oYiu2js3M7DNl+UmumH7m1Wlji5K63rOskv1EhkrivWCYAu3aW57CLXGQeGIjNXpnsTv6j5pq77wO\/Opi34=","CURRENCY":"INR","MID":"knHPNb01357087489330","ORDERID":"7a8a0678d55847c9a0307712b40388c2","RESPCODE":"141","RESPMSG":"User has not completed transaction.","STATUS":"TXN_FAILURE","TXNAMOUNT":"10.00","TXNID":"20220329111212800110168028504976045"}';
             // $params = json_decode($params,true);
 
-
             // $params = json_decode($params,true);
             Log::record('个卡回调callback:POST:'.json_encode($params),'notice');
             if ($params) {
                 $end_time = time()+10;
                 $start_time = time() - 10*60;
-                //签名认证
-                // //签名验证
-                $sign = Sign::setDecrypt($this->key,$params['pkg']);
+                //签名验证
+                $sign = Sign::verifySign($params,$this->key);
                 if(!$sign){
                     $this->error('Signature verification failed', [],  self::SIGN_VERFY_FAID);
                 }
