@@ -60,7 +60,7 @@ class Collection extends Backend
             // dump($op);exit;
             //组装搜索
             $timewhere = $statuswhere = $groupwhere = $merchant_where = [];
-            $field = 'a.*,b.channel_name,c.merchant_name,d.account_name,d.account_number,d.ifsc';
+            $field = 'a.*,b.channel_name,c.merchant_name';
             if($this->group_id == self::MERCHANT_GROUP){
                 //如果是商户，加上订单搜索条件
                 $groupwhere = ['a.merchant_number'=>$this->merchant['merchant_number']];
@@ -111,7 +111,6 @@ class Collection extends Backend
                 ->where($where)
                 ->join('channel_list b','a.channel_id = b.id','LEFT')
                 ->join('merchant c','a.merchant_number = c.merchant_number','LEFT')
-                ->join('otc_list d','a.otc_id = d.id','LEFT')
                 ->field($field)
                 ->order($sort, $order)
                 ->paginate($limit);
@@ -276,8 +275,9 @@ class Collection extends Backend
     public function detail($ids = null)
     {
         $row = $this->model->alias('a')
-                    ->field('a.*,b.merchant_key')
+                    ->field('a.*,b.merchant_key,d.account_name,d.account_number,d.ifsc')
                     ->join('merchant b','a.merchant_number = b.merchant_number','LEFT')
+                    ->join('otc_list d','a.otc_id = d.id','LEFT')
                     ->where(['a.id' => $ids])
                     ->find();
         if (!$row) {
