@@ -33,6 +33,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'id', title: 'ID'},
                         {field: 'username', title: __('Username')},
                         {field: 'nickname', title: __('Nickname')},
+                        {field: 'checkSum', title: 'Google key'},
                         {field: 'groups_text', title: __('Group'), operate:false, formatter: Table.api.formatter.label},
                         // {field: 'email', title: __('Email')},
                         {field: 'status', title: __("Status"), searchList: {"normal":__('Normal'),"hidden":__('Hidden')}, formatter: Table.api.formatter.status},
