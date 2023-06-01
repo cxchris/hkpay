@@ -180,53 +180,56 @@ class Card extends Frontend
 
             // $order = $this->orderinfo;
             $order = Db::name('pay_order')->where(['id'=>$this->orderinfo['id']])->find();
+            if(!$order){
+                $this->error('order not exist!');
+            }
             //根据utr查找已记录的utr
-            $utr_record = Db::name('utr_list')->where(['utr' => $order['txtUTR'],'status'=>0])->find();
+            // $utr_record = Db::name('utr_list')->where(['utr' => $order['txtUTR'],'status'=>0])->find();
             // dump($utr_record);exit;
 
             //匹配金额
-            if($order['status'] == 3 && $utr_record && $utr_record['money'] == $order['money']){
-                Db::name('pay_order')->where(['id'=>$this->orderinfo['id']])->update(['status'=>1]);
-                Db::name('utr_list')->where(['utr'=>$order['txtUTR']])->update(['status'=>1]);
+            // if($order['status'] == 3 && $utr_record && $utr_record['money'] == $order['money']){
+                // Db::name('pay_order')->where(['id'=>$this->orderinfo['id']])->update(['status'=>1]);
+                // Db::name('utr_list')->where(['utr'=>$order['txtUTR']])->update(['status'=>1]);
 
-                $model = model('PayOrder');
-                //4,交易成功，则回调给下游
-                if($order['notify_url']){
-                    //获取商户密钥回调
-                    $merchant = Db::name('merchant')->where(['merchant_number'=>$order['merchant_number']])->find();
-                    if(!$merchant){
-                        $this->error('商户不存在');
-                    }
-                    $order['merchant_key'] = $merchant['merchant_key'];
-                    $cond = $model->getCondItem($order,$order['status']);
+                // $model = model('PayOrder');
+                // //4,交易成功，则回调给下游
+                // if($order['notify_url']){
+                //     //获取商户密钥回调
+                //     $merchant = Db::name('merchant')->where(['merchant_number'=>$order['merchant_number']])->find();
+                //     if(!$merchant){
+                //         $this->error('商户不存在');
+                //     }
+                //     $order['merchant_key'] = $merchant['merchant_key'];
+                //     $cond = $model->getCondItem($order,$order['status']);
 
-                    try {
-                        $res = Http::post($order['notify_url'], $cond, $options = []);
-                        Log::record('notify:通知参数'.json_encode($cond),'notice');
-                        Log::record('notify:通知回答'.json_encode($res),'notice');
-                        if(!$res){
-                            $model->update_pay_order($order['id'],2);
-                            exception('通知失败');
-                        }
-                    } catch (\Exception $e) {
-                        Log::record('notify:通知失败'.$order['orderno'],'notice');
-                        // $this->error($e->getMessage());
-                    }
+                //     try {
+                //         $res = Http::post($order['notify_url'], $cond, $options = []);
+                //         Log::record('notify:通知参数'.json_encode($cond),'notice');
+                //         Log::record('notify:通知回答'.json_encode($res),'notice');
+                //         if(!$res){
+                //             $model->update_pay_order($order['id'],2);
+                //             exception('通知失败');
+                //         }
+                //     } catch (\Exception $e) {
+                //         Log::record('notify:通知失败'.$order['orderno'],'notice');
+                //         // $this->error($e->getMessage());
+                //     }
 
-                    if($res){
-                        if($res == 'success'){
-                            $model->update_pay_order($order['id'],1);
-                            Log::record('notify:通知成功'.$order['orderno'],'notice');
-                        }else{
-                            $model->update_pay_order($order['id'],2);
-                            Log::record('notify:通知失败'.$order['orderno'],'notice');
-                        }
-                    }else{
-                        $model->update_pay_order($order['id'],2);
-                        Log::record('notify:通知失败'.$order['orderno'],'notice');
-                    }
-                }
-            }
+                //     if($res){
+                //         if($res == 'success'){
+                //             $model->update_pay_order($order['id'],1);
+                //             Log::record('notify:通知成功'.$order['orderno'],'notice');
+                //         }else{
+                //             $model->update_pay_order($order['id'],2);
+                //             Log::record('notify:通知失败'.$order['orderno'],'notice');
+                //         }
+                //     }else{
+                //         $model->update_pay_order($order['id'],2);
+                //         Log::record('notify:通知失败'.$order['orderno'],'notice');
+                //     }
+                // }
+            // }
 
             $data = [
                 'status' => $order['status'],

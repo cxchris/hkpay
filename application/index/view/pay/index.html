@@ -164,7 +164,7 @@ index.prototype = {
         //提交
         // _this._submit();
         //判断如果是正在处理的订单，就显示倒计时
-        // _this.orderCheck();
+        _this.orderCheck();
         _this.copy();
         _this.lasttime();
     },
@@ -175,9 +175,10 @@ index.prototype = {
         var _this = this;
         var status = "{$order.status}";
         var calc = "{$calc}";
+        // console.log(status)
         if(status == 3){
             _this.min = calc;
-            _this.lasttime();
+            // _this.lasttime();
             _this.setIntervalByInfo();
         }
     },
@@ -188,7 +189,7 @@ index.prototype = {
         _this.InfoId = setInterval(function(){
             _this.getorderinfo();
             _this.n++;
-        },2000);
+        },1500);
     },
 
     //下单成功且跳转后，间隔5秒一次请求获取订单状态是否成功
@@ -211,7 +212,9 @@ index.prototype = {
                 if(data.code == 1){
                     //根据状态给出弹窗
                     if(data.data.status == 1){
-                        _this.layerOpen('success','Order payment successful!');
+                        _this.layerOpen('success',"{:__('Order payment successful')}",function(){
+                            // console.log(1)
+                        });
                         clearInterval(_this.InfoId);
                     }else if(data.data.status == 2){
                         _this.layerOpen('error','Order payment failed, please return to the app and try again.');
@@ -233,7 +236,7 @@ index.prototype = {
         });
     },
 
-    layerOpen: function($isSuccess = 'error',$msg = ''){
+    layerOpen: function($isSuccess = 'error',$msg = '',fun = null){
         if($isSuccess == 'error'){
             $title = 'error';
             $bgColor = '#FF4351';
@@ -247,6 +250,9 @@ index.prototype = {
                 'background-color: '+$bgColor+'; color:#fff;'
             ],
             content:$msg,
+            end:function(){
+                fun()
+            }
         });
     },
 
@@ -329,7 +335,10 @@ index.prototype = {
         var _this = this;
         jia.open({
             content: "{:__('copy tips',$order['money'])}",
-            btn: "{:__('i got it')}"
+            btn: "{:__('i got it')}",
+            end: function(){
+                // console.log(1)
+            }
         });
     }
 }

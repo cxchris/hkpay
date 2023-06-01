@@ -20,4 +20,5 @@ return [
     'amount tips' => '1、請按實際金額 <span style="color: #c51010;">HK$ %s</span> 支付，不能修改金額，否則可能導致資金不到賬或延遲到賬。',
     'order tips' => '2、<span id="clocker"><span id="minutes">{:minutes}</span>m <span id="seconds">{:seconds}</span>s </span>前完成支付，超過時間訂單將會失效，強行支付會導致資金無法找回或延遲到賬。',
     'copy tips' => '複製賬號成功，請按照實際金額 HK$ %s 完成支付。',
+    'Order payment successful' => '訂單支付成功!',
 ];

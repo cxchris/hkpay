@@ -20,6 +20,7 @@ return [
     'amount tips' => '1、Please pay according to the actual amount of <span style="color: #c51010;">HK$ %s</span>, and the amount cannot be modified, otherwise the funds may not arrive or be delayed.',
     'order tips' => '2、<span id="clocker"><span id="minutes">{:minutes}</span>m <span id="seconds">{:seconds}</span>s </span> before the payment is completed, the order will be invalid if the time is exceeded, and forced payment will cause the funds to be lost or delayed.',
     'copy tips' => 'Copy the account successfully, please complete the payment according to the actual amount HK$ %s.',
+    'Order payment successful' => 'Order payment successful',
 ];
 
 ?>
