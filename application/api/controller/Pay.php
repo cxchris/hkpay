@@ -129,7 +129,7 @@ class Pay extends Api
                 // //签名验证
                 $sign = Sign::verifySign($params,$row->merchant_key);
                 if(!$sign){
-                    // $this->error('Signature verification failed', [],  self::SIGN_VERFY_FAID);
+                    $this->error('Signature verification failed', [],  self::SIGN_VERFY_FAID);
                 }
 
                 $model = model('PayOrder');
@@ -196,7 +196,7 @@ class Pay extends Api
                     $snnumber = Random::getEshopSn();
                 }
 
-                //直接使用通道费率
+                //使用商户费率
                 $realRate = $row->collection_fee_rate;
                 // dump($realRate);exit;
 

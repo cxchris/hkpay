@@ -66,6 +66,28 @@ class Otcpay
         return $card;
     }
 
+    public static function df($orderinfo,$channel){
+        return [
+            'code' => '0000',
+            'msg' => 'success',
+            'data' => []
+        ];
+    }
+
+    /**
+     * Summary of getmodifydata 代付后续操作，返回修改数据
+     * @param mixed $res
+     * @return array
+     */
+    public static function getmodifydata($res){
+        $data = [
+            'tn' => $res['data']??null,
+            'status' => 1,
+        ];
+
+        return $data;
+    }
+
     //从列表中获取一个用做付款
     public static function getuseotc($list){
         $timearr = [

@@ -44,6 +44,7 @@ class CommonPayment {
 		'uzpay' => 'Uzpay',
 		'xdpay' => 'Xdpay',
 		'sgpay' => 'Sgpay',
+		'one' => 'Otcpay',
 	];
 	
 	/**

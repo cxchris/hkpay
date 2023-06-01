@@ -125,7 +125,7 @@ class Apply extends Api
                 // //签名验证
                 $sign = Sign::verifySign($params,$row->merchant_key);
                 if(!$sign){
-                    $this->error('Signature verification failed', [],  self::SIGN_VERFY_FAID);
+                    // $this->error('Signature verification failed', [],  self::SIGN_VERFY_FAID);
                 }
 
                 //商户订单号验证不重复
@@ -198,12 +198,13 @@ class Apply extends Api
                     $snnumber = Random::getOrderSn();
                 }
 
-                //直接使用通道费率
-                $realRate = $channel['rate'];
+                //使用商户费率
+                $realRate = $row->payment_fee_rate;
 
-                // dump($realRate);
+                // dump($realRate);exit;
                 //判断商户余额
-                $reduce_money = $this->getrate($params['amount'],$realRate,'+') + $params['amount'];
+                $reduce_money = $this->getrate($params['amount'],$realRate,'|') + $params['amount'];
+                // dump($this->getrate($params['amount'],$realRate,'|'));exit;
 
                 if($reduce_money > $row['merchant_payment_amount']){
                     $this->error('Merchant balance not enough', [],  self::BALANCE_NOT_ENOUGH);
@@ -217,7 +218,7 @@ class Apply extends Api
                 // $cond['orderno'] = Random::getEshopSn();
                 $cond['out_trade_no'] = $params['merchantSn'];
                 $cond['money'] = $params['amount'];
-                $cond['rate_money'] = $this->getrate($params['amount'],$realRate,'+');
+                $cond['rate_money'] = $this->getrate($params['amount'],$realRate,'|');
                 // dump($cond['rate_money']);exit;
                 $cond['fee_rate'] = $realRate;
                 $cond['reduce_money'] = $reduce_money; //扣款金额
@@ -237,6 +238,7 @@ class Apply extends Api
                 $cond['request_ip'] = $this->request->ip();
                 $cond['create_time'] = time();
                 $cond['remark'] = $params['remark'];
+                $cond['rate_t_money'] = $this->getrate($params['amount'],$channel['rate'],'+');
 
                 $result = $model->insertGetId($cond);
                 if ($result == false) {
