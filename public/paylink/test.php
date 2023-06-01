@@ -16,8 +16,8 @@ $data['sign'] = getSign($data,$key);
 $string = http_build_query($data);
 
 curl_setopt_array($curl, array(
-  // CURLOPT_URL => 'https://onepayhk.com/api/Pay/order',
-  CURLOPT_URL => 'http://localhost:88/api/Pay/order',
+  CURLOPT_URL => 'https://onepayhk.com/api/Pay/order',
+  // CURLOPT_URL => 'http://localhost:88/api/Pay/order',
   CURLOPT_RETURNTRANSFER => true,
   CURLOPT_ENCODING => '',
   CURLOPT_MAXREDIRS => 10,
