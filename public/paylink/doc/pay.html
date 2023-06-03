@@ -25,7 +25,7 @@
 
     <h4 id="toc_2">1.1 参数规范</h4>
 
-    <p>交易金额：默认为卢比（INR）交易，参数值不能带小数。</p>
+    <p>交易金额：默认为港币（HKD）交易，参数值不能带小数。</p>
 
     <h4 id="toc_3">1.2 安全规范</h4>
 
@@ -93,7 +93,7 @@
         <p>接口链接</p>
     </blockquote>
 
-    <p>URL地址：<a href="#">https://ydapppay.com/ydpay/api/Pay/order</a></p>
+    <p>URL地址：<a href="#">https://onepayhk.com/api/Pay/order</a></p>
 
     <blockquote>
         <p>请求参数</p>
@@ -152,14 +152,14 @@
             <td><a href="http://商户回调网关/notify.htm">商户回调地址</a></td>
             <td>支付结果回调URL</td>
         </tr>
-        <tr>
+        <!-- <tr>
             <td>支付通道</td>
             <td>channel</td>
             <td>是</td>
             <td>int</td>
             <td>22</td>
             <td>用户选择的支付通道id</td>
-        </tr>
+        </tr> -->
         <tr>
             <td>时间戳</td>
             <td>time</td>
@@ -257,7 +257,7 @@
                 <td>payUrl</td>
                 <td>是</td>
                 <td>String</td>
-                <td width="400">http://localhost:70/paylink/index.php?params=gba6knqVicCM%2BT67Q8sDArdXE2r%2Bxyj3SPHF7Tof0ubH43dHFC%2B4UlxE%2BWZ1okhfg18CZ%2BAj5dbeRa55rWH1H%2ByX6%2FQ5SNzmhgbef%2FAXU2jOngvCVdvlpAH7XCiGMu4jinGgMzqReb%2BBhDlF0hxaoIYKAPV0Tl6XZXcS%2FCKpGCiTri2L5N2J0Cv2ky4VcxkN</td>
+                <td width="400">https://onepayhk.com/index/pay?orderno=1dea843e29025c71&lang=tc-cn</td>
                 <td>成功时返回，支付链接</td>
             </tr>
         </tbody>
@@ -386,7 +386,7 @@
             <td>是</td>
             <td>String</td>
             <td></td>
-            <td>附加参数（UPI通道为UTR/RefNo.）</td>
+            <td>附加参数</td>
         </tr>
         <tr>
             <td>签名</td>
@@ -426,7 +426,7 @@
         <p>接口链接</p>
     </blockquote>
 
-    <p>URL地址：<a >https://ydapppay.com/ydpay/api/Pay/orderInfo</a></p>
+    <p>URL地址：<a >https://onepayhk.com/api/Pay/orderInfo</a></p>
 
     <blockquote>
         <p>请求参数</p>

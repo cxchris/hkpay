@@ -48,6 +48,9 @@ class Otcpay
         $field['id'] = ['in',$channel];
         $list = Db::name('otc_list')->where($field)->where('status',1)->select();
         // dump($list);
+        if(!$list){
+            return false;
+        }
         $card = self::getuseotc($list);
 
 

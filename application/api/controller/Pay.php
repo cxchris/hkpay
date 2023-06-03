@@ -150,6 +150,9 @@ class Pay extends Api
                 $reflector = CommonPayment::getpaymentlibrary($library);
                 $snnumber = Random::generateRandom(16);
                 $res = CommonPayment::pay($reflector,'pay',$params['amount'],$row->collection_channel_id);
+                if(!$res){
+                    $this->error('Channel not exist', [],  self::CHEANNEL_NOT_EXIST);
+                }
 
                 Log::record('代收下单获取卡池:'.json_encode($res),'notice');
 
