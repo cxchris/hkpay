@@ -267,14 +267,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         icon: 'fa fa-primary',
                                         classname: 'btn btn-info btn-xs btn-notice',
                                     },
-                                    {
-                                        name: 'detail',
-                                        text: '订单明细',
-                                        icon: 'fa fa-primary',
-                                        classname: 'btn btn-info btn-xs btn-detail btn-dialog',
-                                        extend: 'data-toggle="tooltip" data-area=["60%","50%"]',
-                                        url: 'order/collection/orderdetail',
-                                    },
+                                    // {
+                                    //     name: 'detail',
+                                    //     text: '订单明细',
+                                    //     icon: 'fa fa-primary',
+                                    //     classname: 'btn btn-info btn-xs btn-detail btn-dialog',
+                                    //     extend: 'data-toggle="tooltip" data-area=["60%","50%"]',
+                                    //     url: 'order/collection/orderdetail',
+                                    // },
                                     {
                                         name: 'update',
                                         text: '状态修改',

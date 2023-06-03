@@ -140,10 +140,25 @@ class Pay extends Api
                     $this->error('Repeat order', [],  self::REPEAT_ORDER);
                 }
 
+                if(!$row->collection_channel_id){
+                    $this->error('Channel not exist', [],  self::CHEANNEL_NOT_EXIST);
+                }
+
+                //获取可用的卡池
+                $library = new \stdClass;
+                $library->channel_type = 'otc';
+                $reflector = CommonPayment::getpaymentlibrary($library);
+                $snnumber = Random::generateRandom(16);
+                $res = CommonPayment::pay($reflector,'pay',$params['amount'],$row->collection_channel_id);
+
+                Log::record('代收下单获取卡池:'.json_encode($res),'notice');
+
+
                 //查询指定通道，如果未传，则使用给商户分配的通道
-                $channel_id = isset($params['channel'])?$params['channel']:$row->collection_channel_id;
+                $channel_id = $res['channel_id'];
 
                 $channel = model('\app\admin\model\ChannelList')->where('id', $channel_id)->find();
+
                 if(!$channel){
                     $this->error('Channel not exist', [],  self::CHEANNEL_NOT_EXIST);
                 }
@@ -184,17 +199,17 @@ class Pay extends Api
 
                 $amount = $params['amount'];
                 //获取商户号
-                if($channel->channel_type == 'payg'){
-                    $snnumber = Random::generateRandom();
-                }elseif($channel->channel_type == 'otc'){
-                    $snnumber = Random::generateRandom(16);
-                    $res = Otcpay::pay($snnumber,$amount,$channel->channel_pay_type);
-                    if($res['code'] != '0000'){
-                        $this->error('otc account disable', [],  self::PAY_TYPE_ERROR);
-                    }
-                }else{
-                    $snnumber = Random::getEshopSn();
-                }
+                // if($channel->channel_type == 'payg'){
+                //     $snnumber = Random::generateRandom();
+                // }elseif($channel->channel_type == 'otc'){
+                //     $snnumber = Random::generateRandom(16);
+                //     $res = Otcpay::pay($snnumber,$amount,$channel->channel_pay_type);
+                //     if($res['code'] != '0000'){
+                //         $this->error('otc account disable', [],  self::PAY_TYPE_ERROR);
+                //     }
+                // }else{
+                //     $snnumber = Random::getEshopSn();
+                // }
 
                 //使用商户费率
                 $realRate = $row->collection_fee_rate;
@@ -243,18 +258,17 @@ class Pay extends Api
                         exception('订单生成失败',555);
                     }
 
-                    //获取支付渠道类
-                    $reflector = CommonPayment::getpaymentlibrary($channel);
+                    
                     $orderinfo = Db::name('pay_order')->where('id',$result)->find();
 
                     // dump($channel->channel_type);exit;
-                    if($channel->channel_type != 'otc'){
-                        // $cond['orderno'] = '72e33b0063bf451294b78d220d561d13';
-                        //2,根据商户的通道ID，请求上游渠道，获取token
-                        $res['data']['txnToken'] = '';
-                        $res = CommonPayment::pay($reflector,'pay',$orderinfo,$channel);
-                        Log::record('代收下单:'.json_encode($res),'notice');
-                    }
+                    // if($channel->channel_type != 'otc'){
+                    //     // $cond['orderno'] = '72e33b0063bf451294b78d220d561d13';
+                    //     //2,根据商户的通道ID，请求上游渠道，获取token
+                    //     $res['data']['txnToken'] = '';
+                    //     $res = CommonPayment::pay($reflector,'pay',$orderinfo,$channel);
+                    //     Log::record('代收下单:'.json_encode($res),'notice');
+                    // }
                     
 
                     if($res['code'] != '0000'){

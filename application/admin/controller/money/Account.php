@@ -60,7 +60,7 @@ class Account extends Backend
             $model = Db::name('merchant_bank');
 
             $timewhere = $merchantwhere = [];
-            if($this->merchant['id']){
+            if(isset($this->merchant['id'])){
                 $merchantwhere = [
                     'merchant_id' => $this->merchant['id']
                 ];

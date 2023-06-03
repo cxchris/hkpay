@@ -30,6 +30,15 @@ class Account extends Backend
     {
         parent::_initialize();
         $this->model = model('otc_list');
+
+        $collectionList = model('channel_list')->where(['type'=>1])->select();
+
+        $collectionName = [0 => __('None')];
+        foreach ($collectionList as $k => $v) {
+            $collectionName[$v['id']] = $v['channel_name'];
+        }
+        // dump($collectionName);exit;
+        $this->view->assign("collectionName", $collectionName);
     }
 
     /**
@@ -57,7 +66,7 @@ class Account extends Backend
             // dump($op);exit;
             //组装搜索
             $timewhere = $statuswhere = $groupwhere = [];
-            $field = 'a.*';
+            $field = 'a.*,b.channel_name';
             if (isset($filter['create_time'])) {
                 $timearr = explode(' - ',$filter['create_time']);
                 // $model->where('a.create_time','between',[strtotime($timearr[0]),strtotime($timearr[1])]);

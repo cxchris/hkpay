@@ -46,19 +46,23 @@ class Merchant extends Backend
 
         $this->assignconfig("admin", ['id' => $this->auth->id]);
 
-        //获取channellist
-        $collectionList = \think\Db::name("channel_list")->field('*', true)->where(array('status'=>1,'type'=>$this->collection_type))->order('id ASC')->select();
+        //获取所有银行卡支付渠道
+        // $collectionList = \think\Db::name("channel_list")->field('*', true)->where(array('status'=>1,'type'=>$this->collection_type))->order('id ASC')->select();
+        $collectionList = model('otc_list')->where(['status'=>1])->select();
         $paymentList = \think\Db::name("channel_list")->field('*', true)->where(array('status'=>1,'type'=>$this->payment_type))->order('id ASC')->select();
         
         //获取name
-        $collectionName = $paymentListName = [0 => __('None')];
+        $collectionName = [];
+        $paymentListName = [0 => __('None')];
 
         foreach ($collectionList as $k => $v) {
-            $collectionName[$v['id']] = $v['channel_name'];
+            $type = $v['type'] == 1 ? '转数快' : '银行卡';
+            $collectionName[$v['id']] = $type.'-'.$v['account_number'].'-'.$v['ifsc'];
         }
         foreach ($paymentList as $k => $v) {
             $paymentListName[$v['id']] = $v['channel_name'];
         }
+        // dump($collectionName);exit;
         $this->view->assign("collectionName", $collectionName);
         $this->view->assign("paymentListName", $paymentListName);
     }
@@ -219,6 +223,7 @@ class Merchant extends Backend
      */
     public function edit($ids = null)
     {
+                    
         $row = $this->model->get(['id' => $ids]);
         if (!$row) {
             $this->error(__('No Results were found'));
@@ -236,6 +241,7 @@ class Merchant extends Backend
                     unset($params['checksum']);
 
                     $data = $this->install_data($params);
+
                     $result = $row->validate('Merchant.edit')->save($data);
                     // echo $this->model->getLastsql();exit;
                     if ($result === false) {
@@ -480,6 +486,14 @@ class Merchant extends Backend
 
         $data['collection_fee_rate'] = $collection_fee_rate;
         $data['payment_fee_rate'] = $payment_fee_rate;
+
+        //代收卡池里存字符串、兼容多个
+        $collection_channel_arr = $data['collection_channel_id'];
+        $collection_channel_id = implode(',',$collection_channel_arr);
+
+        $data['collection_channel_id'] = $collection_channel_id;
+
+
 
         unset($data['collection_fee_rate_per']);
         unset($data['collection_fee_rate_sigle']);

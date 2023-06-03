@@ -212,6 +212,53 @@ class Payment extends Backend
     }
 
     /**
+     * 手动修改状态
+     */
+    public function updatestatus($id)
+    {
+        if (!in_array($this->group_id , [self::SUPER_ADMIN_GROUP,self::ADMIN_GROUP])) {
+            $this->error('管理员才可以访问');
+        }
+        $id = $id ? $id : $this->request->post("id");
+        $row = $this->model->get(['id' => $id]);
+        
+        $status = $this->request->post("status");
+        // dump($id);exit;
+        if (!$row) {
+            $this->error(__('No Results were found'));
+        }
+        $url = $row->notify_url;
+        
+        if($row->status == 3 && $status == 2){
+            $this->error('订单已驳回，不可修改为成功');
+        }
+
+        if($row->status == 3 && $status == 3){
+            $this->error('订单已驳回');
+        }
+
+        if($status == 3){
+            // 1.回退
+            $res = $this->model->rollback_order($row);
+            if(!$res){
+                $this->error('驳回失败');
+            }
+        }
+
+        $row->status = $status;
+        $result = $row->save();
+
+        //直接通知
+        if($url){
+            //4,交易成功，则回调给下游
+            $this->model->notifyShop($row->orderno, $status);
+        }
+
+        // echo $row->getlastsql();exit;
+        $this->success('状态修改成功');
+    }
+
+    /**
      * 驳回订单
      */
     public function reject($id = ""){

@@ -110,6 +110,11 @@ class Apply extends Api
                     $this->error('amount not higher than the allowed limit', [],  self::AMOUNT_HIGHER_ALLOWED);
                 }
 
+                //必须传入channel了
+                if(!$params['channel']){
+                    $this->error('No channel', [],  self::AMOUNT_HIGHER_ALLOWED);
+                }
+
                 $model = model('PaymentOrder');
 
                 //每日限额，查询今日商户一共代付成功的金额
@@ -125,7 +130,7 @@ class Apply extends Api
                 // //签名验证
                 $sign = Sign::verifySign($params,$row->merchant_key);
                 if(!$sign){
-                    // $this->error('Signature verification failed', [],  self::SIGN_VERFY_FAID);
+                    $this->error('Signature verification failed', [],  self::SIGN_VERFY_FAID);
                 }
 
                 //商户订单号验证不重复
@@ -135,15 +140,15 @@ class Apply extends Api
                 }
 
                 //根据传入金额来指定channelid
-                if($params['amount'] <= 1000){
-                    $use_channel_id = $row->payment_channel_id;
-                }else{
-                    $use_channel_id = $row->big_payment_channel_id?$row->big_payment_channel_id:$row->payment_channel_id;
-                }
+                // if($params['amount'] <= 1000){
+                //     $use_channel_id = $row->payment_channel_id;
+                // }else{
+                //     $use_channel_id = $row->big_payment_channel_id?$row->big_payment_channel_id:$row->payment_channel_id;
+                // }
 
                 //查询指定通道，如果未传，则使用给商户分配的通道
                 // $channel_id = isset($params['channel'])?$params['channel']:$use_channel_id;
-                $channel_id = $use_channel_id;
+                $channel_id = $params['channel'];
 
                 $channel = model('\app\admin\model\ChannelList')->where('id', $channel_id)->find();
                 if(!$channel){

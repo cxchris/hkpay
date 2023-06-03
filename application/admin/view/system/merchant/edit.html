@@ -58,9 +58,9 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="collection_channel_id" class="control-label col-xs-12 col-sm-2">代收通道:</label>
+        <label for="collection_channel_id" class="control-label col-xs-12 col-sm-2">代收卡池:</label>
         <div class="col-xs-12 col-sm-8">
-            {:build_select('row[collection_channel_id]', $collectionName, $row['collection_channel_id'], ['class'=>'form-control selectpicker', 'data-rule'=>'required'])}
+            {:build_checkboxs('row[collection_channel_id][]', $collectionName, $row['collection_channel_id'])}
         </div>
     </div>
 
@@ -97,17 +97,17 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="payment_channel_id" class="control-label col-xs-12 col-sm-2">单笔低于1K代付通道(包含1000):</label>
+        <label for="payment_channel_id" class="control-label col-xs-12 col-sm-2">代付通道:</label>
         <div class="col-xs-12 col-sm-8">
             {:build_select('row[payment_channel_id]', $paymentListName, $row['payment_channel_id'], ['class'=>'form-control selectpicker'])}
         </div>
     </div>
-    <div class="form-group">
+    <!-- <div class="form-group">
         <label for="big_payment_channel_id" class="control-label col-xs-12 col-sm-2">单笔高于1K代付通道:</label>
         <div class="col-xs-12 col-sm-8">
             {:build_select('row[big_payment_channel_id]', $paymentListName, $row['big_payment_channel_id'], ['class'=>'form-control selectpicker'])}
         </div>
-    </div>
+    </div> -->
 
     <div class="form-group">
         <label for="use_ip" class="control-label col-xs-12 col-sm-2">报备IP:</label>

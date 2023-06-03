@@ -165,11 +165,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 icon: 'fa fa-primary',
                                 classname: 'btn btn-info btn-xs btn-notice',
                             },
+                            // {
+                            //     name: 'reject',
+                            //     text: '驳回',
+                            //     icon: 'fa fa-info',
+                            //     classname: 'btn btn-warning btn-xs btn-reject',
+                            // },
                             {
-                                name: 'reject',
-                                text: '驳回',
-                                icon: 'fa fa-info',
-                                classname: 'btn btn-warning btn-xs btn-reject',
+                                name: 'update',
+                                text: '状态修改',
+                                // icon: 'fa fa-warning',
+                                classname: 'btn btn-warning btn-xs btn-update',
                             },
                         ],
                     }
@@ -286,6 +292,69 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     }else{
                                         Layer.alert(data.msg, {icon: 5})
                                         $('.btn-refresh').trigger('click')
+                                    }
+
+                                }
+                            })
+                        })
+                    },
+                    'click .btn-update': function (e, value,row,index) {
+                        var that = this;
+                        var table = $(that).closest('table'); 
+                        var options = table.bootstrapTable('getOptions');
+                        // console.log(row)
+
+                        var content = '<form id="check"><div style="padding: 30px;" class="table-update menulist">\
+                                <div class="form-group">\
+                                    <label>状态:</label>\
+                                    <select id="check_status" data-rule="required" class="form-control selectpicker" name="check_status">\
+                                    ';
+                            
+                                content += '<option value="2" >已支付(通过)</option>';
+                                content += '<option value="3" >拒绝(驳回)</option>';
+                            
+                            content +=  '</select>\
+                                </div>\
+                                <button type="submit" class="btn btn-success check_status_submit" formnovalidate="">提交</button>\
+                            </div></form>';
+
+                        layer.open({
+                            type: 1,
+                            skin: 'layui-layer-demo', //样式类名
+                            area: ['300px', '240px'], //宽高
+                            closeBtn: 1, //不显示关闭按钮
+                            anim: 2,
+                            title:'状态修改',
+                            shadeClose: true, //开启遮罩关闭
+                            content: content,
+                            zIndex:99,
+                            success: function(){
+
+                            }
+                        });
+
+                        $('.check_status_submit').click(function(){
+                            var status = $('#check_status').val();
+                            console.log(status)
+
+                            $.ajax({
+                                type:"POST",
+                                url:"order/payment/updatestatus",
+                                data:{
+                                    status:status,
+                                    id:row.id,
+                                },
+                                dataType:"json",
+                                success:function (data) {
+                                    // console.log(data);
+                                    // layer.close(load)
+                                    if(data.code == 1){
+                                        Layer.msg(data.msg)
+                                        // Layer.closeAll()
+                                        $('.btn-refresh').trigger('click')
+                                    }else{
+                                        Layer.alert(data.msg, {icon: 5})
+                                        // $('.btn-refresh').trigger('click')
                                     }
 
                                 }
