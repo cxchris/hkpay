@@ -9,7 +9,7 @@ $data = [
   'amount' => rand(1,10),
   'notifyUrl' => 'http://localhost:88/api/Pay/order',
   'time' => time(),
-  'channel' => 1,
+  // 'channel' => 1,
 ];
 $data['sign'] = getSign($data,$key);
 
