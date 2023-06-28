@@ -67,6 +67,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 ],
             });
 
+            $('.regx').click(function(){
+                layer.open({
+                    type: 1,
+                    skin: 'layui-layer-demo', //样式类名
+                    area: ['400px', '400px'], //宽高
+                    closeBtn: 1, //不显示关闭按钮
+                    anim: 2,
+                    title:'正则检验',
+                    shadeClose: true, //开启遮罩关闭
+                    content: _this.innerhtml(),
+                    zIndex:99
+                });
+                _this.checkregx();
+            })
+
             $("input[type='text']").each(function (index) {
                 this.autocomplete = "off";
             })
@@ -124,6 +139,60 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
         edit: function () {
             Form.api.bindevent($("form[role=form]"));
+        },
+        innerhtml: function(data){
+            var content = '<form><div style="padding: 30px;" class="table-update">\
+                    <div class="form-group">\
+                        <label>正则表达式:</label>\
+                        <input class="form-control regex" type="text" value="转账HKD\\s*(\\d+(\\.\\d+)?)" />\
+                    </div>\
+                    <div class="form-group">\
+                        <label>检验字符串:</label>\
+                        <textarea class="form-control string">LIU G******已转账HKD0.98至您的账户108-433XXX-XXX。按此查看详情。</textarea>\
+                    </div>\
+                    <div class="form-group">\
+                        <label>提取结果:</label>\
+                        <input class="form-control result" type="text" value="null" readonly />\
+                    </div>\
+                    <button type="button" class="btn btn-success check_submit">检测</button>\
+                </div></form>';
+            return content;
+
+        },
+
+        checkregx: function(){
+            var _this = this;
+            $('.check_submit').click(function(){
+                let string = $('.string').val();
+                let regex = $('.regex').val();
+
+                let value = _this.matchAmount(string,regex);
+                $('.result').val(value);
+            })
+        },
+
+        matchAmount: function(content, regexString) {
+            var _this = this;
+            // console.log(content)
+            let regex;
+            
+            try {
+              // 可能引发异常的代码
+              regex = new RegExp(regexString);
+            } catch (error) {
+              // 异常处理代码
+              Layer.alert('Invalid regular', {icon: 5})
+            }
+            
+            // console.log(regex)
+            
+            const match = content.match(regex);
+            
+            if (match) {
+                return match[1];
+            } else {
+                return '未找到金额';
+            }
         },
     };
     return Controller;
