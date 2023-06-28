@@ -214,4 +214,45 @@ class Upnotice extends Api
         }
         return true;
     }
+
+    //返回可用的pkg列表
+    public function pkg(){
+        if ($this->request->isPost()) {
+            $params = $this->request->post();
+            if ($params) {
+                //签名认证
+                // //签名验证
+                // $sign = Sign::getbkSign($params,$this->akey);
+                // dump($sign);exit;
+                if(!isset($params['sign'])){
+                    $this->error('no sign', [],  self::SIGN_VERFY_FAID);
+                }
+
+                $sign = Sign::verifySign($params,$this->key);
+                if(!$sign){
+                    $this->error('Signature verification failed', [],  self::SIGN_VERFY_FAID);
+                }
+
+                //获取可用的pgk
+                $pkg = model('bank')->where('status',1)->select();
+                $data = []; 
+                if($pkg){
+                    foreach($pkg as $k => $v){
+                        $data[$k] = [
+                            'id' => $v['id'],
+                            'name' => $v['name'],
+                            'pkg' => $v['pkg'],
+                            'regex' => $v['regex'],
+                        ];
+                    }
+                }
+
+                $this->success('success',$data,200);
+            }else{
+                $this->error('Parameter can not be empty', [],  self::PARMETR_NOT_EMPTY);
+            }
+        }else{
+            $this->error('only post', [],  self::ONLY_POST);
+        }
+    }
 }
