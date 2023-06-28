@@ -141,7 +141,7 @@ class Pay extends Api
                 }
 
                 if(!$row->collection_channel_id){
-                    $this->error('Channel not exist', [],  self::CHEANNEL_NOT_EXIST);
+                    $this->error('Channel not exist1', [],  self::CHEANNEL_NOT_EXIST);
                 }
 
                 //获取可用的卡池
@@ -151,7 +151,7 @@ class Pay extends Api
                 $snnumber = Random::generateRandom(16);
                 $res = CommonPayment::pay($reflector,'pay',$params['amount'],$row->collection_channel_id);
                 if(!$res){
-                    $this->error('Channel not exist', [],  self::CHEANNEL_NOT_EXIST);
+                    $this->error('Channel not exist2', [],  self::CHEANNEL_NOT_EXIST);
                 }
 
                 Log::record('代收下单获取卡池:'.json_encode($res),'notice');
@@ -163,7 +163,7 @@ class Pay extends Api
                 $channel = model('\app\admin\model\ChannelList')->where('id', $channel_id)->find();
 
                 if(!$channel){
-                    $this->error('Channel not exist', [],  self::CHEANNEL_NOT_EXIST);
+                    $this->error('Channel not exist3', [],  self::CHEANNEL_NOT_EXIST);
                 }
 
                 if($channel['status'] != 1){
