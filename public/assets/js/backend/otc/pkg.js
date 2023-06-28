@@ -75,7 +75,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     closeBtn: 1, //不显示关闭按钮
                     anim: 2,
                     title:'正则检验',
-                    shadeClose: true, //开启遮罩关闭
+                    shadeClose: false, //开启遮罩关闭
                     content: _this.innerhtml(),
                     zIndex:99
                 });
@@ -175,7 +175,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             var _this = this;
             // console.log(content)
             let regex;
-            
+
             try {
               // 可能引发异常的代码
               regex = new RegExp(regexString);
