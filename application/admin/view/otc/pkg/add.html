@@ -19,6 +19,12 @@
         </div>
     </div>
     <div class="form-group">
+        <label for="text" class="control-label col-xs-12 col-sm-2">示例:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input type="text" class="form-control" id="text" name="row[text]" placeholder="" value="" data-rule="required" />
+        </div>
+    </div>
+    <div class="form-group">
         <label for="status" class="control-label col-xs-12 col-sm-2">状态:</label>
         <div class="col-xs-12 col-sm-8">
             {:build_radios('row[status]', ['1'=>__('Normal'), '0'=>'禁用'])}

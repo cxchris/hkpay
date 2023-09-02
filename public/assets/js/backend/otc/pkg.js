@@ -49,6 +49,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'name', title: '银行名'},
                         {field: 'pkg', title: '包名'},
                         {field: 'regex', title: '正则表达式',operate:false},
+                        {field: 'text', title: '例子'},
                         {
                             field: 'status', 
                             title: '状态', 
