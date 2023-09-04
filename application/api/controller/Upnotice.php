@@ -235,7 +235,8 @@ class Upnotice extends Api
 
                 //获取可用的pgk
                 $pkg = model('bank')->where('status',1)->select();
-                $data = []; 
+                $bdata = [];
+                $data = [];
                 if($pkg){
                     foreach($pkg as $k => $v){
                         $data[$k] = [
@@ -246,8 +247,9 @@ class Upnotice extends Api
                         ];
                     }
                 }
-
-                $this->success('success',$data,200);
+                $bdata['data'] = $data;
+                $bdata['is_show'] = 1;
+                $this->success('success',$bdata,200);
             }else{
                 $this->error('Parameter can not be empty', [],  self::PARMETR_NOT_EMPTY);
             }
