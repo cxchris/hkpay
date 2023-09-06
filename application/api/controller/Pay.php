@@ -116,6 +116,9 @@ class Pay extends Api
                     $this->error('amount not higher than the allowed limit', [],  self::AMOUNT_HIGHER_ALLOWED);
                 }
 
+                //判断获取到的通道ID，默认是1，cashapp
+                $channelId = isset($params['channel'])?$params['channel']:1;
+
                 //每日限额，查询今日商户一共代付成功的金额
                 $timearr = [
                     strtotime(date('Y-m-d'). '00:00:00'),
@@ -141,7 +144,7 @@ class Pay extends Api
                 }
 
                 if(!$row->collection_channel_id){
-                    $this->error('Channel not exist1', [],  self::CHEANNEL_NOT_EXIST);
+                    $this->error('Channel not exist', [],  self::CHEANNEL_NOT_EXIST);
                 }
 
                 //获取可用的卡池
@@ -149,9 +152,15 @@ class Pay extends Api
                 $library->channel_type = 'otc';
                 $reflector = CommonPayment::getpaymentlibrary($library);
                 $snnumber = Random::generateRandom(16);
-                $res = CommonPayment::pay($reflector,'pay',$params['amount'],$row->collection_channel_id);
-                if(!$res){
-                    $this->error('Channel not exist2', [],  self::CHEANNEL_NOT_EXIST);
+                //打包查询条件
+                $channeldata = [
+                    'otc_channel' => $row->collection_channel_id,
+                    'channel' => $channelId,
+                ];
+                $res = CommonPayment::pay($reflector,'pay',$params['amount'],$channeldata);
+                // dump($res);exit;
+                if(!$res || $res['code'] == 400){
+                    $this->error('Channel not exist', [],  self::CHEANNEL_NOT_EXIST);
                 }
 
                 Log::record('代收下单获取卡池:'.json_encode($res),'notice');
@@ -163,7 +172,7 @@ class Pay extends Api
                 $channel = model('\app\admin\model\ChannelList')->where('id', $channel_id)->find();
 
                 if(!$channel){
-                    $this->error('Channel not exist3', [],  self::CHEANNEL_NOT_EXIST);
+                    $this->error('Channel not exist', [],  self::CHEANNEL_NOT_EXIST);
                 }
 
                 if($channel['status'] != 1){
@@ -234,6 +243,8 @@ class Pay extends Api
                     $cond['account_money'] = $amount - $cond['rate_money'];
                     $cond['billing_around'] = $row->merchant_billing_around;
                     $cond['pay_type'] = $paychannel;
+                    $cond['utr'] = Random::alnum(8);
+                    $cond['ext_data'] = $res['account_number'];
 
                     // $cond['customer_uid'] = $custom['id'];
                     // $cond['customer_name'] = $custom['username'];
@@ -357,7 +368,7 @@ class Pay extends Api
             $data = $model->getCondItem($record,$record['status']);
 
             Log::record('返回:'.json_encode($data),'notice');
-            $this->success('success',$data,200);
+            $this->success('pay success',$data,200);
         }else{
             $this->error('Parameter can not be empty', [],  self::PARMETR_NOT_EMPTY);
         }
@@ -418,7 +429,7 @@ class Pay extends Api
 
                     $data = [];
                     $data['tn'] = isset($params['TXNID'])?$params['TXNID']:'';
-                    $data['ext_data'] = $order['ext_data'] =  isset($params['BANKTXNID'])?$params['BANKTXNID']:''; //BANKTXNID
+                    // $data['ext_data'] = $order['ext_data'] =  isset($params['BANKTXNID'])?$params['BANKTXNID']:''; //BANKTXNID
                     $data['callback_time'] = $order['callback_time'] = isset($params['TXNDATE'])?strtotime($params['TXNDATE']):time();
                     if($params['STATUS'] == 'TXN_SUCCESS'){
                         //交易成功
