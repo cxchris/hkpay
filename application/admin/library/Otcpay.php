@@ -40,12 +40,12 @@ class Otcpay
     * 发起交易，生成order
     */
     public static function pay($amount,$channel){
-        // dump($channel);
         // dump($amount);exit;
         self::$amount = $amount;
         //获取可用的otc_list，个卡
         // $type = $pay_type == 'bank'?2:1;
-        $field['id'] = ['in',$channel];
+        $field['id'] = ['in',$channel['otc_channel']];
+        $field['channel_id'] = $channel['channel'];
         $list = Db::name('otc_list')->where($field)->where('status',1)->select();
         // dump($list);
         if(!$list){
