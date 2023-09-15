@@ -63,6 +63,12 @@ class Merchant extends Backend
             $paymentListName[$v['id']] = $v['channel_name'];
         }
         // dump($collectionName);exit;
+        //结算周期
+        $billing_around = [
+            'd0' => 'd0',
+            'd1' => 'd1',
+        ];
+        $this->view->assign("billing_around", $billing_around);
         $this->view->assign("collectionName", $collectionName);
         $this->view->assign("paymentListName", $paymentListName);
     }

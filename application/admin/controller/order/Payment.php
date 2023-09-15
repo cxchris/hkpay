@@ -304,7 +304,7 @@ class Payment extends Backend
     {
         $row = $this->model
                 ->alias('a')
-                ->field('a.*,c.merchant_number,c.merchant_key,b.channel_type,b.channel_sign,b.channel_safe_url,b.channel_key')
+                ->field('a.*,c.merchant_number,c.merchant_key,b.channel_type,b.channel_sign,b.channel_safe_url,b.channel_key,b.channel_name')
                 ->join('channel_list b','a.channel_id = b.id','LEFT')
                 ->join('merchant c','a.merchant_id = c.id','LEFT')
                 ->where(['a.id' => $ids])

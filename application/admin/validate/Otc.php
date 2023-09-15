@@ -14,7 +14,7 @@ class Otc extends Validate
     protected $rule = [
         'account_name' => 'require|max:30',
         'account_number' => 'require|max:30',
-        'ifsc' => 'require|max:20',
+        // 'ifsc' => 'require|max:20',
         'day_limit' => 'require|between:0,100000000',
     ];
 
@@ -34,8 +34,8 @@ class Otc extends Validate
      * 验证场景
      */
     protected $scene = [
-        'add'  => ['account_name', 'account_number', 'ifsc', 'day_limit'],
-        'edit' => ['account_name', 'account_number', 'ifsc', 'day_limit'],
+        'add'  => ['account_name', 'account_number', 'day_limit'],
+        'edit' => ['account_name', 'account_number', 'day_limit'],
     ];
 
     public function __construct(array $rules = [], $message = [], $field = [])
@@ -43,13 +43,13 @@ class Otc extends Validate
         $this->field = [
             'account_name' => '户主',
             'account_number' => '账号',
-            'ifsc' => 'ifsc',
+            // 'ifsc' => 'ifsc',
             'day_limit' => '每日限额',
         ];
         $this->message = array_merge($this->message, [
             'account_name.regex' => '户主只能由3-30位数字、字母、下划线组合',
             'account_number.regex' => '账号只能由3-30位数字、字母、下划线组合',
-            'ifsc.regex' => 'ifsc只能由3-30位数字、字母、下划线组合',
+            // 'ifsc.regex' => 'ifsc只能由3-30位数字、字母、下划线组合',
         ]);
         parent::__construct($rules, $message, $field);
     }

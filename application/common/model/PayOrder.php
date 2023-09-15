@@ -162,12 +162,12 @@ class PayOrder extends Model
             }
 
             // //2.将到账金额加给用商户的代收余额里
-            $merchant = Db::name('merchant')->field('merchant_amount')->where('merchant_number',$v['merchant_number'])->find(); //先查找商家前值
+            $merchant = Db::name('merchant')->field('merchant_payment_amount')->where('merchant_number',$v['merchant_number'])->find(); //先查找商家前值
 
             $res2 = Db::name('merchant')
                 ->where('merchant_number',$v['merchant_number'])
                 ->update([
-                    'merchant_amount'=>['inc', $v['account_money']]
+                    'merchant_payment_amount'=>['inc', $v['account_money']]
                 ]);
             if(!$res2){
                 exception('添加商户代收余额失败');
@@ -178,14 +178,43 @@ class PayOrder extends Model
                 'merchant_number' => $v['merchant_number'],
                 'orderno' => $v['orderno'],
                 'type' => 2, //type = 2-代付结算
-                'bef_amount' => $merchant['merchant_amount'],
+                'bef_amount' => $merchant['merchant_payment_amount'],
                 'change_amount' => $v['account_money'],
-                'aft_amount' => $merchant['merchant_amount'] + $v['account_money'],
+                'aft_amount' => $merchant['merchant_payment_amount'] + $v['account_money'],
                 'status' => 1,
                 'create_time' => time()
             ];
             // dump($adddata);exit;
             $res3 = Db::name('amount_change_record')->insert($adddata);
+            if(!$res3){
+                exception('添加账变记录失败');
+            }
+
+            //4.添加到系统营收中
+            $system_aomout = Db::name('config')->field('value')->where('name','system_aomout')->find(); //先查找system_aomout前值
+
+            $res4 = Db::name('config')
+                ->where('name','system_aomout')
+                ->update([
+                    'value'=>['inc', $v['rate_t_money']]
+                ]);
+            if(!$res4){
+                exception('添加系统余额失败');
+            }
+
+            //5.添加到系统营收记录
+            $adddata = [
+                'merchant_number' => $v['merchant_number'],
+                'orderno' => $v['eshopno'],
+                'type' => 2, //type = 2-代收结算
+                'bef_amount' => $system_aomout['value'],
+                'change_amount' => $v['rate_t_money'],
+                'aft_amount' => $system_aomout['value'] + $v['rate_t_money'],
+                'status' => 1,
+                'create_time' => time()
+            ];
+            // dump($adddata);exit;
+            $res3 = Db::name('system_amount_change_record')->insert($adddata);
             if(!$res3){
                 exception('添加账变记录失败');
             }

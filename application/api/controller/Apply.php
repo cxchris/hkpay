@@ -115,6 +115,17 @@ class Apply extends Api
                     $this->error('No channel', [],  self::AMOUNT_HIGHER_ALLOWED);
                 }
 
+                //为银行卡渠道的时候必须传入bankCode和银行名字
+                if($params['channel'] == 2){
+                    if(!$params['bankCode']){
+                        $this->error('No bankCode', [],  self::AMOUNT_HIGHER_ALLOWED);
+                    }
+
+                    if(!$params['bankName']){
+                        $this->error('No bankName', [],  self::AMOUNT_HIGHER_ALLOWED);
+                    }
+                }
+
                 $model = model('PaymentOrder');
 
                 //每日限额，查询今日商户一共代付成功的金额

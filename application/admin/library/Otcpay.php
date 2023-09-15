@@ -62,7 +62,6 @@ class Otcpay
                 $a = rand(1,99)/100;
                 $s = rand(0,1);
                 $amount = $s == 0?$amount-$a:$amount+$a;
-                // dump($amount);exit;
             }
             $card['amount'] = $amount;
             // $card['orderno'] = $orderno;
