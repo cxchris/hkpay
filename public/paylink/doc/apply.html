@@ -143,7 +143,7 @@
     <td>是</td>
     <td>Number</td>
     <td>6222020200098541458</td>
-    <td>交易類型為bank時，此项内容为受益人帳戶號碼，交易類型為UPI時，此项内容为VPA/UPI ID</td>
+    <td>交易類型为1-转数快时，此项内容为用户的转数快账号，2-银行卡时为银行卡号</td>
 </tr>
 <tr>
     <td>开户行名称</td>
@@ -159,15 +159,7 @@
     <td>是</td>
     <td>String</td>
     <td>HDFC0001898</td>
-    <td>银行在金融系统编码（ifscCode）,当交易類型为bank时为必传项</td>
-</tr>
-<tr>
-    <td>银行分店</td>
-    <td>branchName</td>
-    <td>是</td>
-    <td>String</td>
-    <td>KOCHI，KERALA</td>
-    <td>银行分店名称</td>
+    <td>银行在金融系统编码（Bank Code）,当交易類型为2-银行卡时为必传项</td>
 </tr>
 <tr>
     <td>代付结果回调URL</td>
@@ -182,15 +174,15 @@
     <td>channel</td>
     <td>是</td>
     <td>int</td>
-    <td>22</td>
-    <td>用户选择的支付通道id</td>
+    <td>1</td>
+    <td>用户选择的支付通道id,1-转数快，2-银行</td>
 </tr>
 <tr>
     <td>备注</td>
     <td>remark</td>
     <td>是</td>
     <td>String</td>
-    <td>代付1000卢比</td>
+    <td></td>
     <td>备注</td>
 </tr>
 <tr>
