@@ -37,8 +37,16 @@ class Account extends Backend
         foreach ($collectionList as $k => $v) {
             $collectionName[$v['id']] = $v['channel_name'];
         }
+
+        //获取银行列表
+        $banklistName = [0 => __('None')];
+        $banklist = model('bank')->where('status',1)->select();
+        foreach ($banklist as $v) {
+            $banklistName[$v['id']] = $v['name'];
+        }
         // dump($collectionName);exit;
         $this->view->assign("collectionName", $collectionName);
+        $this->view->assign("banklistName", $banklistName);
     }
 
     /**
@@ -66,7 +74,7 @@ class Account extends Backend
             // dump($op);exit;
             //组装搜索
             $timewhere = $statuswhere = $groupwhere = [];
-            $field = 'a.*,b.channel_name';
+            $field = 'a.*,b.channel_name,c.name as pkg_name';
             if (isset($filter['create_time'])) {
                 $timearr = explode(' - ',$filter['create_time']);
                 // $model->where('a.create_time','between',[strtotime($timearr[0]),strtotime($timearr[1])]);
@@ -96,6 +104,7 @@ class Account extends Backend
                 ->where($where)
                 ->where('a.type',$this->type)
                 ->join('channel_list b','a.channel_id = b.id','LEFT')
+                ->join('bank c','a.pkg = c.id','LEFT')
                 ->field($field)
                 ->order($sort, $order)
                 ->paginate($limit);
