@@ -103,7 +103,9 @@ class Collection extends Backend
                 ->paginate($limit);
             // echo $this->model->getLastsql();exit;
             $items = $list->items();
-            $typelist = $this->typeslect(true);
+            // $typelist = $this->typeslect(true);
+
+            $typelist = $model->typeslect(true);
 
             foreach ($items as $k => $v) {
                 $items[$k]['create_time'] = datevtime($v['create_time']);
@@ -267,23 +269,13 @@ class Collection extends Backend
         $this->error(__('You have no permission'));
     }
 
-    /**
+     /**
      * 获取所有账变类型
      */
     public function typeslect($is_array = false){
-        $result = [
-            1 => '人工调账',
-            2 => '代收结算',
-            3 => '转入代付记录',
-            4 => '商户下发',
-            5 => '商户下发拒绝回滚'
-        ];
-        if($is_array){
-            return $result;
-        }else{
-            return json($result);
-        }
+        return $this->model->typeslect($is_array);
 
     }
+    
     
 }

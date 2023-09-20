@@ -428,6 +428,11 @@ class Collection extends Backend
         $row->status = $status;
         $result = $row->save();
 
+        //判断如果已支付的状态，并且该订单结算状态为0，就给商户结算
+        if($status == 1 && $row->is_billing == 0){
+            model('PayOrder')->check_pay_order($row);
+        }
+
         // echo $row->getlastsql();exit;
         $this->success('状态修改成功');
     }

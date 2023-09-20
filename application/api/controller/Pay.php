@@ -132,6 +132,7 @@ class Pay extends Api
                 // //签名验证
                 $sign = Sign::verifySign($params,$row->merchant_key);
                 if(!$sign){
+                    // Log::record('Signature verification failed');
                     $this->error('Signature verification failed', [],  self::SIGN_VERFY_FAID);
                 }
 

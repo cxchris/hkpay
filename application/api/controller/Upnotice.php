@@ -98,7 +98,7 @@ class Upnotice extends Api
                 // dump($order);
                 // exit;
                 if(!$order){
-                    $this->error('order not exist');
+                    $this->error('order not exist', [],  self::ORDER_NOT_EXIST);
                 }
 
                 //判断

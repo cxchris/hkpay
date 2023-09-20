@@ -85,6 +85,7 @@ class Api
     const NOT_BE_DECIMAL = 3035;
     const NOT_REPORTED_IP = 3036;
     const BALANCE_NOT_ENOUGH = 3037;
+    const ORDER_NOT_EXIST =  4001;
 
     /**
      * 构造方法

@@ -60,6 +60,8 @@ class PaymentChangeRecord extends Model
             2 => '代付预扣',
             3 => '转入代付记录',
             4 => '代付预扣失败回退',
+            5 => '商户下发拒绝回滚',
+            6 => '代收结算自动转入',
         ];
 
         if($is_array){

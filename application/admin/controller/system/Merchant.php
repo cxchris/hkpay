@@ -29,10 +29,10 @@ class Merchant extends Backend
     protected $password = '123456'; //默认密码
     protected $operator_type = [
         0 => '请选择',
-        1 => '增加代收余额',
-        2 => '减少代收余额',
-        3 => '增加代付余额',
-        4 => '减少代付余额',
+        // 1 => '增加代收余额',
+        // 2 => '减少代收余额',
+        3 => '增加商户余额',
+        4 => '减少商户余额',
     ];
 
     public function _initialize()
@@ -85,12 +85,30 @@ class Merchant extends Backend
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
+            $statuswhere = [];
+            $filter = $this->request->get("filter", '');
+            // dump($filter);exit;
+            $op = $this->request->get("op", '', 'trim');
+
+            $filter = (array)json_decode($filter, true);
+            $op = (array)json_decode($op, true);
+
+            if (isset($filter['status'])) {
+
+                // $filter['a.status'] = $filter['status'];
+                $statuswhere = ['a.status' => $filter['status']];
+                unset($filter['status']);
+            }
+
+            \think\Request::instance()->get(['op' => json_encode($op)]);
+            \think\Request::instance()->get(['filter' => json_encode($filter)]);
 
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
             $sort = 'a.id';
 
             $list = $this->model
                 ->alias('a')
+                ->where($statuswhere)
                 ->where($where)
                 ->join('channel_list b','a.collection_channel_id = b.id','LEFT')
                 ->join('channel_list c','a.payment_channel_id = c.id','LEFT')

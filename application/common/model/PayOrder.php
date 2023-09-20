@@ -161,8 +161,8 @@ class PayOrder extends Model
                 exception('修改结算状态失败');
             }
 
-            // //2.将到账金额加给用商户的代收余额里
-            $merchant = Db::name('merchant')->field('merchant_payment_amount')->where('merchant_number',$v['merchant_number'])->find(); //先查找商家前值
+            // //2.将到账金额追加给用商户的代付余额里
+            $merchant = Db::name('merchant')->field('id,merchant_payment_amount')->where('merchant_number',$v['merchant_number'])->find(); //先查找商家前值
 
             $res2 = Db::name('merchant')
                 ->where('merchant_number',$v['merchant_number'])
@@ -175,9 +175,9 @@ class PayOrder extends Model
 
             //3.添加账变记录
             $adddata = [
-                'merchant_number' => $v['merchant_number'],
+                'merchant_id' => $merchant['id'],
                 'orderno' => $v['orderno'],
-                'type' => 2, //type = 2-代付结算
+                'type' => 6, //type = 6-代收结算自动转入
                 'bef_amount' => $merchant['merchant_payment_amount'],
                 'change_amount' => $v['account_money'],
                 'aft_amount' => $merchant['merchant_payment_amount'] + $v['account_money'],
@@ -185,7 +185,7 @@ class PayOrder extends Model
                 'create_time' => time()
             ];
             // dump($adddata);exit;
-            $res3 = Db::name('amount_change_record')->insert($adddata);
+            $res3 = Db::name('payment_change_record')->insert($adddata);
             if(!$res3){
                 exception('添加账变记录失败');
             }
