@@ -86,7 +86,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 columns = [
                     {field: 'orderno', title: '平台订单号'},
                     {field: 'out_trade_no', title: '商户订单号'},
-                    {field: 'tn', title: '三方订单号'},
+                    
+                    // {field: 'tn', title: '三方订单号'},
                     {
                         field: 'channel_id', title: '代付通道',
                         formatter: function (value,row) {
@@ -110,7 +111,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     },
 
                     {field: 'merchant_number', title: '商户号',operate:false,formatter: function (value,row){
-                        return row.merchant_name+'('+value+')';
+                        return row.merchant_name+'<br>'+value;
                     }},
                     {
                         field: 'merchant_id', 
@@ -118,13 +119,45 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         visible:false,
                         searchList: $.getJSON("order/payment/merchantList")
                     },
-                    {field: 'pay_type', title: '代付方式',operate:false},
-                    {field: 'channel_type', title: '付款方式',operate:false},
+                    {
+                        field: 'money', title: '订单金额/手续费', operate: false,
+                        formatter: function (value,row) {
+                            return '<span style="color:red;">'+value+'</span>/'+row.rate_money;
+                        },
+                    },
+                    {
+                        field: 'bankName', title: '提现银行', operate: false,
+                        formatter: function (value,row) {
+                            return '<span style="color:red;">'+value+'</span>';
+                        },
+                    },
+                    {
+                        field: 'accountNo', title: '提现卡号', operate: false,
+                        formatter: function (value,row) {
+                            return '<span style="color:red;">'+value+'</span>';
+                        },
+                    },
+                    {
+                        field: 'accountName', title: '账户名', operate: false,
+                        formatter: function (value,row) {
+                            return '<span style="color:red;">'+value+'</span>';
+                        },
+                    },
+                    {
+                        field: 'bankCode', title: '银行编号', operate: false,
+                        formatter: function (value,row) {
+                            return '<span style="color:red;">'+value+'</span>';
+                        },
+                    },
+                    // { field: 'accountNo', title: '提现卡号', operate: false },
+                    // {field: 'rate_money', title: '代付手续费（百分比+每笔）',operate:false},
+                    
+                    // {field: 'pay_type', title: '代付方式',operate:false},
+                    // {field: 'channel_type', title: '付款方式',operate:false},
                     {field: 'create_time', title: '创建时间',  operate: 'RANGE', addclass: 'datetimerange', sortable: true,defaultValue:Moment().startOf('day').format('YYYY-MM-DD 00:00:00') + ' - ' + Moment().endOf('day').format('YYYY-MM-DD 23:59:59')},
                     {field: 'callback_time', title: '回调时间', operate: 'RANGE', addclass: 'datetimerange', sortable: true},
-                    {field: 'money', title: '交易金额',operate:false},
-                    {field: 'rate_money', title: '代付手续费（百分比+每笔）',operate:false},
-                    {field: 'reduce_money', title: '扣款金额',operate:false},
+                    
+                    { field: 'reduce_money', title: '扣款金额', operate: false },
                     {field: 'rate_t_money', title: '上游手续费',operate:false},
                     
                     {
