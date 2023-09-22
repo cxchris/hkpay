@@ -98,6 +98,7 @@ class Upnotice extends Api
                 // dump($order);
                 // exit;
                 if(!$order){
+                    //查询丢单，通知bb群组
                     $this->error('order not exist', [],  self::ORDER_NOT_EXIST);
                 }
 

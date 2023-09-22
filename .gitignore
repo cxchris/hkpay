@@ -8,6 +8,7 @@
 /public/assets/libs/
 /public/assets/addons/*
 /public/uploads/*
+/node/node_modules/*
 .idea
 composer.lock
 *.log
