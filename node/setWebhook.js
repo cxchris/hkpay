@@ -5,5 +5,5 @@ dotenv.config();
 const token = process.env.TELEGRAM_BOT_TOKEN;
 const bot = new TelegramBot(token);
 
-const webhookUrl = 'https://yourdomain.com/telegram-webhook'; // 替换为你的服务器地址
+const webhookUrl = 'https://onepayyd.com/telegram-webhook'; // 替换为你的服务器地址
 bot.setWebhook(webhookUrl);
