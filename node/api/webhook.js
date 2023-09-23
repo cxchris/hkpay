@@ -5,6 +5,7 @@ export const webhook = async (req, res) => {
     const formData = req.body;
     const name = formData.name;
 
+    console.log(formData)
     logger.info(JSON.stringify(formData));
     // if (!name) {
     //   throw new Error('name cannot be empty');
