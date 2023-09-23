@@ -1,5 +1,4 @@
 import express from 'express'
-import bodyParser from 'body-parser';
 import { error, successMiddleware, errorMiddleware } from './lib/utils.js'
 import router from './lib/router.js'; 
 import dotenv from 'dotenv';
@@ -8,9 +7,7 @@ dotenv.config();
 
 const app = express();
 const port = process.env.port;
-console.log(port)
-
-app.use(bodyParser.urlencoded({ extended: true }));
+// console.log(port)
 
 // 在app中应用成功数据中间件
 app.use(successMiddleware);

@@ -3,9 +3,9 @@ import { logger } from '../lib/log.js';
 export const webhook = async (req, res) => {
   try {
     const formData = req.body;
-    const name = formData.name;
+    // const name = formData.name;
 
-    console.log(req)
+    console.log(formData)
     logger.info(JSON.stringify(formData));
     // if (!name) {
     //   throw new Error('name cannot be empty');

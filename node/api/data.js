@@ -11,6 +11,7 @@ const table = 'groups';
 export const lostOder = async (req, res) => {
   try {
     const formData = req.body;
+    console.log(formData)
     const name = formData.name;
     // if (!name) {
     //   throw new Error('name cannot be empty');
