@@ -1,22 +1,23 @@
 import { logger } from '../lib/log.js';
 import { sendMessage, getChatAdmins } from '../lib/bot.js';
 import error from '../lib/error.js';
-const permissionId = [ 5256774376 ]; //被允许私人访问的
+const permissionId = [5256774376]; //被允许私人访问的
+let chatId;
 
 export const webhook = async (req, res) => {
     try {
         const formData = req.body;
-        console.log(formData)
+        // console.log(formData)
         //类型
         const chatType = formData.message.chat.type; //类型，private-私聊，group-群组
-        const chatId = formData.message.chat.id;
         const text = formData.message.text;
-        console.log(chatType)
-        console.log(chatId)
+        chatId = formData.message.chat.id;
+        // console.log(chatType)
+        // console.log(chatId)
 
         // 获取群组的管理员列表
         const administrators = await getChatAdmins(chatId);
-        console.log(administrators)
+        // console.log(administrators)
         // console.log(formData)
         // logger.info(JSON.stringify(formData));
 
@@ -35,6 +36,8 @@ export const webhook = async (req, res) => {
             if (!administrators.includes(chatId)) {
                 throw error[402];
             }
+        } else {
+            throw error[403];
         }
 
         //根据指令来判断操作
