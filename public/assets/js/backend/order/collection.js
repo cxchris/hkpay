@@ -45,7 +45,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             // {field: 'orderno', title: '平台订单号'},
                             {field: 'out_trade_no', title: '商户订单号',operate: 'LIKE'},
-                            {field: 'eshopno', title: '电商订单',operate: 'LIKE'},
+                            {field: 'eshopno', title: '系统订单',operate: 'LIKE'},
                             {field: 'tn', title: '三方订单号'},
                             {field: 'channel_id', title: '代收通道',formatter: function (value,row) 
                             {
@@ -182,7 +182,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             // {field: 'orderno', title: '平台订单号'},
                             {field: 'out_trade_no', title: '商户订单号',operate: 'LIKE'},
-                            {field: 'eshopno', title: '电商订单',operate: 'LIKE'},
+                            {field: 'eshopno', title: '系统订单',operate: 'LIKE'},
                             {field: 'tn', title: '三方订单号'},
                             {field: 'channel_id', title: '代收通道',formatter: function (value,row) 
                             {
