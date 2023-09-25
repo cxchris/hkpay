@@ -6,10 +6,13 @@ const permissionId = [ 5256774376 ]; //被允许私人访问的
 export const webhook = async (req, res) => {
     try {
         const formData = req.body;
+        console.log(formData)
         //类型
         const chatType = formData.message.chat.type; //类型，private-私聊，group-群组
         const chatId = formData.message.chat.id;
         const text = formData.message.text;
+        console.log(chatType)
+        console.log(chatId)
 
         // 获取群组的管理员列表
         const administrators = await getChatAdmins(chatId);
