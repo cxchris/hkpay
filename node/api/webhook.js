@@ -14,9 +14,6 @@ export const webhook = async (req, res) => {
         chatId = formData.message.chat.id;
         // console.log(chatType)
         // console.log(chatId)
-
-        // 获取群组的管理员列表
-        const administrators = await getChatAdmins(chatId);
         // console.log(administrators)
         // console.log(formData)
         // logger.info(JSON.stringify(formData));
@@ -33,6 +30,8 @@ export const webhook = async (req, res) => {
                 throw error[402];
             }
         } else if (chatType == 'group') {
+            // 获取群组的管理员列表
+            const administrators = await getChatAdmins(chatId);
             if (!administrators.includes(chatId)) {
                 throw error[402];
             }
