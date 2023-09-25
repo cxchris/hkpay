@@ -4,9 +4,7 @@ dotenv.config();
 const token = process.env.TELEGRAM_BOT_TOKEN;
 
 
-const bot = new TelegramBot(token, {
-    polling: true,
-});
+const bot = new TelegramBot(token);
 
 export const sendMessage = (chatId,content) => {
     bot.sendMessage(chatId, content);
