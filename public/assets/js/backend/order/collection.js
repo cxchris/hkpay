@@ -209,7 +209,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 field: 'merchant_number', 
                                 title: '商户号',
                                 formatter: function (value,row){
-                                    return row.merchant_name+'('+value+')';
+                                    return row.merchant_name+'<br>'+value;
                                 },
                                 searchList: $.getJSON("order/collection/merchantlist")
                             },
