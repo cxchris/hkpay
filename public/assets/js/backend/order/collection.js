@@ -43,7 +43,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     },
                     columns: [
                         [
-                            {field: 'orderno', title: '平台订单号'},
+                            // {field: 'orderno', title: '平台订单号'},
                             {field: 'out_trade_no', title: '商户订单号',operate: 'LIKE'},
                             {field: 'eshopno', title: '电商订单',operate: 'LIKE'},
                             {field: 'tn', title: '三方订单号'},
@@ -180,7 +180,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     },
                     columns: [
                         [
-                            {field: 'orderno', title: '平台订单号'},
+                            // {field: 'orderno', title: '平台订单号'},
                             {field: 'out_trade_no', title: '商户订单号',operate: 'LIKE'},
                             {field: 'eshopno', title: '电商订单',operate: 'LIKE'},
                             {field: 'tn', title: '三方订单号'},

@@ -1,6 +1,6 @@
 import { SQLiteDatabase } from '../lib/sqllite.js';
 
-export class model extends SQLiteDatabase { 
+export default class model extends SQLiteDatabase { 
     constructor(databasePath, tableName) {
         super(databasePath);
         this.tableName = tableName;

@@ -1,7 +1,16 @@
 import { logger } from '../lib/log.js';
 import { sendMessage, getChatAdmins } from '../lib/bot.js';
 import error from '../lib/error.js';
+import GroupModel from '../model/group.js'; // 根据您的项目结构和路径导入
+
 const permissionId = [5256774376]; //被允许私人访问的
+const commandList = [
+    'start',
+    'grouplist',
+    'groupadd'
+];
+const dbnama = './sqllitedb/database.db';
+const table = 'groups';
 let chatId;
 
 export const webhook = async (req, res) => {
@@ -11,10 +20,10 @@ export const webhook = async (req, res) => {
         //类型
         const chatType = formData.message.chat.type; //类型，private-私聊，group-群组
         const text = formData.message.text;
+        const fromid = formData.message.from.id
         chatId = formData.message.chat.id;
         // console.log(chatType)
         // console.log(chatId)
-        // console.log(administrators)
         // console.log(formData)
         // logger.info(JSON.stringify(formData));
 
@@ -23,16 +32,25 @@ export const webhook = async (req, res) => {
         // if (!isValidSignature) {
         //   throw error[401];
         // }
+        //处理text，获得指令
+        let command = text.replace(/@.*$/, '');
+        command = command.replace('/', '');
+        console.log(command)
+        if (command == 'start') {
+            //处理开始处理完就不走后面的
+            sendMessage(chatId, 'welcome!');
+            return;
+        }
 
         //首先判断是私聊还是群聊，私聊就只能指定用户才能有权限操作，群聊就判断群聊管理员，先获取管理员
         if (chatType == 'private') {
-            if (!permissionId.includes(chatId)) {
+            if (!permissionId.includes(fromid)) {
                 throw error[402];
             }
         } else if (chatType == 'group') {
             // 获取群组的管理员列表
             const administrators = await getChatAdmins(chatId);
-            if (!administrators.includes(chatId)) {
+            if (!administrators.includes(fromid)) {
                 throw error[402];
             }
         } else {
@@ -40,8 +58,14 @@ export const webhook = async (req, res) => {
         }
 
         //根据指令来判断操作
+        if (commandList.includes(command)) {
+            const model = new GroupModel(dbnama, table);
+            if (typeof model[command] === 'function') { 
+                model[command]();
+            }
+        }
         
-        const result = administrators;
+        const result = [];
         res.success(result);
     } catch (error) {
         if (error.code == 402) {

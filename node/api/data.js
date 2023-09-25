@@ -1,6 +1,6 @@
 import { success, error, successMiddleware, errorMiddleware, verifySign } from '../lib/utils.js'
 import dotenv from 'dotenv';
-import { GroupModel } from '../model/group.js'; // 根据您的项目结构和路径导入
+import GroupModel from '../model/group.js'; // 根据您的项目结构和路径导入
 dotenv.config();
 
 const key = process.env.user;
