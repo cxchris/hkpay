@@ -26,7 +26,7 @@ export const webhook = async (req, res) => {
         // console.log(chatType)
         // console.log(chatId)
         // console.log(formData)
-        // logger.info(JSON.stringify(formData));
+        logger.info(JSON.stringify(formData));
 
         // // 验证签名
         // const isValidSignature = verifySign(formData, key);
@@ -37,6 +37,7 @@ export const webhook = async (req, res) => {
         let command = text.replace(/@.*$/, '');
         command = command.replace('/', '');
         console.log(command)
+
         if (command == 'start') {
             //处理开始处理完就不走后面的
             sendMessage(chatId, 'welcome!');
