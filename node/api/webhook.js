@@ -26,7 +26,7 @@ export const webhook = async (req, res) => {
         // console.log(chatType)
         // console.log(chatId)
         // console.log(formData)
-        logger.info(JSON.stringify(formData));
+        // logger.info(JSON.stringify(formData));
 
         // // 验证签名
         // const isValidSignature = verifySign(formData, key);
