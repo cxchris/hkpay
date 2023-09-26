@@ -41,6 +41,7 @@ export const webhook = async (req, res) => {
         if (command == 'start') {
             //处理开始处理完就不走后面的
             sendMessage(chatId, 'welcome!');
+            res.success([]);
             return;
         }
 
