@@ -13,6 +13,7 @@ export default class model extends SQLiteDatabase {
 
         const placeholders = keys.map(() => '?').join(', ');
         const sql = `INSERT INTO ${this.tableName} (${keys.join(', ')}) VALUES (${placeholders})`;
+        console.log(values)
 
         try {
             const result = await this.run(sql, values);
@@ -25,6 +26,7 @@ export default class model extends SQLiteDatabase {
     // 查询数据
     async select(where = '', params = []) {
         const sql = `SELECT * FROM ${this.tableName} ${where}`;
+        // console.log(params)
 
         try {
             const result = await this.query(sql, params);

@@ -24,22 +24,25 @@ export class SQLiteDatabase {
                     reject(err);
                 } else {
                     resolve(rows);
-                    this.close(); // 自动关闭数据库连接
+                    // this.close(); // 自动关闭数据库连接
                 }
             });
         });
     }
 
     async run(sql, params = []) {
-        return new Promise((resolve, reject) => {
-            this.db.run(sql, params, (err) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve({ changes: this.db.changes, lastID: this.db.lastID });
-                    this.close(); // 自动关闭数据库连接
-                }
-            });
+        return new Promise(async (resolve, reject) => {
+            try {
+                this.db.run(sql, params, (err) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve({ changes: this.db.changes, lastID: this.db.lastID });
+                    }
+                });
+            } catch (err) {
+                reject(err);
+            }
         });
     }
 

@@ -20,7 +20,8 @@ export const webhook = async (req, res) => {
         //类型
         const chatType = formData.message.chat.type; //类型，private-私聊，group-群组
         const text = formData.message.text;
-        const fromid = formData.message.from.id
+        const fromid = formData.message.from.id;
+        const chatInfo = formData.message.chat;
         chatId = formData.message.chat.id;
         // console.log(chatType)
         // console.log(chatId)
@@ -47,11 +48,19 @@ export const webhook = async (req, res) => {
             if (!permissionId.includes(fromid)) {
                 throw error[402];
             }
+            //私聊不允许访问groupadd
+            if (command == 'groupadd') {
+                throw error[405];
+            }
         } else if (chatType == 'group') {
             // 获取群组的管理员列表
             const administrators = await getChatAdmins(chatId);
             if (!administrators.includes(fromid)) {
                 throw error[402];
+            }
+            //群聊不允许访问grouplist
+            if (command == 'grouplist') {
+                throw error[405];
             }
         } else {
             throw error[403];
@@ -61,14 +70,14 @@ export const webhook = async (req, res) => {
         if (commandList.includes(command)) {
             const model = new GroupModel(dbnama, table);
             if (typeof model[command] === 'function') { 
-                model[command]();
+                model[command](chatInfo);
             }
         }
         
         const result = [];
         res.success(result);
     } catch (error) {
-        if (error.code == 402) {
+        if (error.code == 402 || error.code == 405) {
             sendMessage(chatId,error.message);
         }
         res.error(error.message);

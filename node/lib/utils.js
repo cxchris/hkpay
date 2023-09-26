@@ -98,3 +98,15 @@ export const verifySign = (params, key = '') => {
 
   return sys_sign === sign;
 };
+
+//生成指定数组
+export const splitArray = (arr, chunkSize) => {
+  const result = [];
+  
+  for (let i = 0; i < arr.length; i += chunkSize) {
+    const val = arr.slice(i, i + chunkSize)
+    result.push(val);
+  }
+  
+  return result;
+}

@@ -1,5 +1,6 @@
 import TelegramBot from 'node-telegram-bot-api';
 import dotenv from 'dotenv';
+import { splitArray } from './utils.js';
 dotenv.config();
 const token = process.env.TELEGRAM_BOT_TOKEN;
 
@@ -28,5 +29,37 @@ export async function getChatAdmins(chatId) {
     } catch (error) {
         console.error('获取管理员列表失败：', error.message);
         throw error;
+    }
+}
+
+export async function setInlineKeybord(list, msg) {
+    let inlineKeyboard = {}
+    const chatId = msg.id;
+    //循环list，获取keyboard
+    const chunkSize = 4;
+    const outputArray = splitArray(list, chunkSize);
+    // console.log(outputArray)
+
+    inlineKeyboard.inline_keyboard = outputArray;
+    // console.log(inlineKeyboard)
+
+    // 创建消息对象，并包含 inline keyboard
+    const messageOptions = {
+        reply_markup: JSON.stringify(inlineKeyboard)
+    };
+    // console.log(messageOptions)
+
+    bot.sendMessage(chatId, '列出在用群组：', messageOptions);
+}
+
+// 用于获取群组名称的异步函数
+export async function getGroupName(chatId) {
+    try {
+        const chat = await bot.getChat(chatId);
+        const groupName = chat.title;
+        return groupName;
+        // console.log(`群组ID为 ${chatId} 的群组名称是: ${groupName}`);
+    } catch (error) {
+        console.error(`获取群组信息时出错：${error.message}`);
     }
 }
