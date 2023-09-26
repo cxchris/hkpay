@@ -51,6 +51,8 @@ export default class GroupModel extends model {
             // console.log(data)
             res = await this.insert(data);
             sendMessage(group_id,'Group configuration successful')
+        } else {
+            sendMessage(group_id,'aleady use')
         }
         return res;
     }
