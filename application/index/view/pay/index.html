@@ -125,7 +125,13 @@
                 <p style="margin: 5px 0;"><span class="list-left">{:__('order number')}：</span><span>{$order.out_trade_no}</span></p>
                 <p style="margin: 5px 0;"><span class="list-left">{:__('account')}：</span><span>{$otc_info.account_number}</span></p>
                 <p style="margin: 5px 0;"><span class="list-left">{:__('account name')}：</span><span>{$otc_info.account_name}</span></p>
-                <p style="margin: 5px 0;"><span class="list-left copy-code-text">{:__('bank code')}：</span><span>{$otc_info.ifsc}</span></p>
+
+                <p style="margin: 5px 0;"><span class="list-left copy-code-text">{:__('bank info')}：</span><span>{$otc_info.bank_info}</span></p>
+                {if $otc_info.type neq 1}
+                    <p style="margin: 5px 0;"><span class="list-left copy-code-text">{:__('bank code')}：</span><span>{$otc_info.ifsc}</span></p>
+                {/if}
+
+                
             </div>
         </div>
         <p style="text-align: center; margin-top: 30px;"><span data-clipboard-text="{$otc_info.account_number}" class="copy-account">{:__('copy account')}</span></p>
@@ -286,8 +292,10 @@ index.prototype = {
             maxTime--;
             if(maxTime < 0){
                 clearInterval(_this.timeId);
-                _this.layerOpen('error',"{:__('timed out')}");
-                // window.location.href = "{$errorUrl}";
+                _this.layerOpen('error',"{:__('timed out')}",function(){
+                    window.location.href = "{$errorUrl}";
+                });
+                
             }
         }
 

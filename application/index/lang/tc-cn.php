@@ -16,6 +16,7 @@ return [
     'copy name' => '複製帳戶名',
     'copy code' => '複製銀行編碼',
     'timed out' => '訂單已超時',
+    'bank info' => '銀行信息',
     'i got it' => '我知道了',
     'amount tips' => '1、請按實際金額 <span style="color: #c51010;">HK$ %s</span> 支付，不能修改金額，否則可能導致資金不到賬或延遲到賬。',
     'order tips' => '2、<span id="clocker"><span id="minutes">{:minutes}</span>m <span id="seconds">{:seconds}</span>s </span>前完成支付，超過時間訂單將會失效，強行支付會導致資金無法找回或延遲到賬。',

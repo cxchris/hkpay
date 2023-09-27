@@ -127,7 +127,12 @@ class Pay extends Frontend
         if($otcid == 0){
             $this->error('order error');
         }
-        $this->otc_info = Db::name('otc_list')->where(['id'=>$otcid])->find();
+        $this->otc_info = Db::name('otc_list')
+                            ->field('a.*,b.name as bank_info')
+                            ->alias('a')
+                            ->join('bank b','a.pkg = b.id','LEFT')
+                            ->where(['a.id'=>$otcid])
+                            ->find();
         if(!$this->otc_info){
             $this->error('Chennel closed');
         }
