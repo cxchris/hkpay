@@ -221,7 +221,7 @@ class PayOrder extends Model
 
             Db::commit();
         } catch (\Exception $e) {
-            Log::record('结算异常'.json_encode($e),'notice');
+            Log::record('结算异常'.$e->getMessage(),'notice');
             Db::rollback();
             return false;
         }
