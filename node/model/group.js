@@ -43,7 +43,7 @@ export default class GroupModel extends model {
         let res;
         // console.log(group_id)
         // console.log(list)
-        if (list.length === 0) {
+        if (!list) {
             const data = {
                 group_name : group_name,
                 group_id : group_id
