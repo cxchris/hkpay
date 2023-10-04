@@ -16,7 +16,7 @@ let chatId;
 export const webhook = async (req, res) => {
     try {
         const formData = req.body;
-        // console.log(formData)
+        console.log(formData)
         //类型
         const chatType = formData.message.chat.type; //类型，private-私聊，group-群组
         const text = formData.message.text;
