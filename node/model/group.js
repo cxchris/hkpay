@@ -76,7 +76,7 @@ export default class GroupModel extends model {
                 text : formData.callback_query.message.text,
                 fromid : formData.callback_query.message.from.id,
                 chatInfo: formData.callback_query.message.chat,
-                callback_data : formData.data,
+                callback_data : formData.callback_query.data,
                 formType : 'callback_query'
             }
         } else {

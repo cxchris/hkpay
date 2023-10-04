@@ -23,7 +23,7 @@ export const webhook = async (req, res) => {
         if (formType == 'message') {
             await model.handleMessage(text,chatInfo,chatType,fromid);
         } else if(formType == 'callback_query'){
-            await model.callbackQuery(callback_data,chatInfo.id);
+            await model.callbackQuery(callback_data,chatId);
         }
 
         res.success([]);
