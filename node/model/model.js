@@ -42,9 +42,17 @@ export default class model extends SQLiteDatabase {
             }
         }
 
+        // 在查询语句中添加 LIMIT 1
+        where += ' LIMIT 1';
+
         const query = await this.select(where, params);
 
-        return query;
+        // 检查查询结果是否存在并返回第一项
+        if (query.length > 0) {
+            return query[0];
+        }
+
+        return []; // 如果查询结果为空，返回 []
     }
 
     // 查询数据
