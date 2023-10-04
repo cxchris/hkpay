@@ -42,7 +42,7 @@ export default class GroupModel extends model {
         const list = await this.get(filter)
         let res;
         // console.log(group_id)
-        // console.log(list)
+        console.log(list)
         if (!list) {
             const data = {
                 group_name : group_name,
