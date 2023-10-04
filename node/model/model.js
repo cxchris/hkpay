@@ -22,6 +22,30 @@ export default class model extends SQLiteDatabase {
             throw error;
         }
     }
+    /**
+     * 通用查询
+     * @param {*} filter 
+     * @returns 
+     */
+    async get(filter) {
+        // 构建查询条件和参数
+        let where = 'WHERE 1'; // 默认条件，始终为真，以允许构建更多的条件
+        const params = [];
+
+        // 根据传入的过滤条件构建查询条件和参数
+        if (filter) {
+            for (const key in filter) {
+                if (filter.hasOwnProperty(key)) {
+                    where += ` AND ${key} = ?`;
+                    params.push(filter[key]);
+                }
+            }
+        }
+
+        const query = await this.select(where, params);
+
+        return query;
+    }
 
     // 查询数据
     async select(where = '', params = []) {
