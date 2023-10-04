@@ -141,7 +141,7 @@ export default class GroupModel extends model {
         console.log(list)
         // 在这里根据用户的响应执行相应的操作
         if (data == list.id) {
-            sendMessage(chatId, `群名${list.group_name}，群id${list.group_id}`);
+            sendMessage(chatId, `群名<${list.group_name}>，群id<${list.group_id}>`);
         } else {
             sendMessage(chatId, '异常');
         }
