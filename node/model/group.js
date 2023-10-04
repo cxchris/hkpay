@@ -137,14 +137,13 @@ export default class GroupModel extends model {
     //处理callback
     async callbackQuery(data, chatId) {
         const filter = { id : data }
-        console.log(filter)
         const list = await this.get(filter)
         console.log(list)
         // 在这里根据用户的响应执行相应的操作
-        if (data === 'button1') {
-            sendMessage(chatId, '你点击了按钮1');
-        } else if (data === 'button2') {
-            sendMessage(chatId, '你点击了按钮2');
+        if (data == list.id) {
+            sendMessage(chatId, `你点击了按钮${list.id}`);
+        } else {
+            sendMessage(chatId, '异常');
         }
     }
 }
