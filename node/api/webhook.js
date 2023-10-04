@@ -23,6 +23,19 @@ export const webhook = async (req, res) => {
         const fromid = formData.message.from.id;
         const chatInfo = formData.message.chat;
         chatId = formData.message.chat.id;
+
+
+        const query = formData.callback_query;
+        const data = query.data;
+
+        // 在这里根据用户的响应执行相应的操作
+        if (data === 'button1') {
+            sendMessage(chatId, '你点击了按钮1');
+        } else if (data === 'button2') {
+            sendMessage(chatId, '你点击了按钮2');
+        }
+
+
         // console.log(chatType)
         // console.log(chatId)
         // console.log(formData)

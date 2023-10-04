@@ -32,6 +32,11 @@ export async function getChatAdmins(chatId) {
     }
 }
 
+/**
+ * 列出在用群组
+ * @param {*} list 
+ * @param {*} msg 
+ */
 export async function setInlineKeybord(list, msg) {
     let inlineKeyboard = {}
     const chatId = msg.id;
