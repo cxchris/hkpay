@@ -135,9 +135,11 @@ export default class GroupModel extends model {
         //根据指令来判断操作
         if (commandList.includes(command)) {
             if (typeof this[command] === 'function') { 
-                this[command](chatInfo);
+                await this[command](chatInfo);
             }
         }
+        
+        return true;
     }
 
     //处理callback

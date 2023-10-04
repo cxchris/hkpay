@@ -11,9 +11,11 @@ export const webhook = async (req, res) => {
     try {
         const model = new GroupModel(dbnama, table);
         const formData = req.body;
+        console.log(formData)
 
         //第一步得区分callback还是message类型
         let { chatType, text, fromid, chatInfo, callback_data, formType } = await model.getBaseMessageData(formData);
+        chatId = chatInfo.id
 
         //类型
         // console.log({ chatType, text, fromid, chatInfo, callback_data, formType })
