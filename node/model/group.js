@@ -42,8 +42,8 @@ export default class GroupModel extends model {
         const list = await this.get(filter)
         let res;
         // console.log(group_id)
-        console.log(list)
-        if (!list) {
+        // console.log(list)
+        if (list.length === 0) {
             const data = {
                 group_name : group_name,
                 group_id : group_id
