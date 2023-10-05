@@ -120,7 +120,7 @@ export default class GroupModel extends model {
                 throw error[402];
             }
             //私聊不允许访问groupadd
-            if (command == 'groupadd' || command == 'groupdel') {
+            if (command == 'groupadd') {
                 throw error[405];
             }
         } else if (chatType == 'group') {
@@ -129,8 +129,8 @@ export default class GroupModel extends model {
             if (!administrators.includes(fromid)) {
                 throw error[402];
             }
-            //群聊不允许访问grouplist
-            if (command == 'grouplist') {
+            //群聊不允许访问grouplist/groupdel
+            if (command == 'grouplist' || command == 'groupdel') {
                 throw error[405];
             }
         } else {
