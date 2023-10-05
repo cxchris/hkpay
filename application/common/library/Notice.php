@@ -33,13 +33,13 @@ class Notice
 
             $url = Env::get('notice.url').self::notice_url;
 
-            dump($url);
+            // dump($url);
             // dump($arrData);
             $res = Http::formpost($url,$arrData);
 
             if($res){
                 $ret = json_decode($res,true);
-                dump($ret);exit;
+                // dump($ret);exit;
                 if($ret){
                     if(isset($ret['code']) && $ret['code'] == 200){
                         return json($ret);
