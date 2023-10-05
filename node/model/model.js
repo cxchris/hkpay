@@ -29,34 +29,31 @@ export default class model extends SQLiteDatabase {
      */
     async get(filter) {
         // 构建查询条件和参数
-        let where = 'WHERE 1'; // 默认条件，始终为真，以允许构建更多的条件
-        const params = [];
+        const params = {};
 
         // 根据传入的过滤条件构建查询条件和参数
         if (filter) {
             for (const key in filter) {
                 if (filter.hasOwnProperty(key)) {
-                    where += ` AND ${key} = ?`;
-                    params.push(filter[key]);
+                    params[key] = filter[key];
                 }
             }
         }
 
-        // 在查询语句中添加 LIMIT 1
-        where += ' LIMIT 1';
-
-        const query = await this.select(where, params);
+        // 调用select方法，并传递过滤条件和LIMIT 1
+        const query = await this.select(params, 1);
 
         // 检查查询结果是否存在并返回第一项
         if (query.length > 0) {
             return query[0];
         }
 
-        return []; // 如果查询结果为空，返回 []
+        return null; // 如果查询结果为空，返回 null
     }
 
+
     // 查询数据
-    async select(filters = {}) {
+    async select(filters = {}, limit = null) {
         let where = '';
         const params = [];
 
@@ -67,7 +64,12 @@ export default class model extends SQLiteDatabase {
             params.push(...Object.values(filters));
         }
 
-        const sql = `SELECT * FROM ${this.tableName} ${where}`;
+        let limitClause = '';
+        if (limit !== null) {
+            limitClause = `LIMIT ${limit}`;
+        }
+
+        const sql = `SELECT * FROM ${this.tableName} ${where} ${limitClause}`;
 
         try {
             const result = await this.query(sql, params);
@@ -76,7 +78,6 @@ export default class model extends SQLiteDatabase {
             throw error;
         }
     }
-
 
 
     // 更新数据
