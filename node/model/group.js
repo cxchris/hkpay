@@ -152,11 +152,12 @@ export default class GroupModel extends model {
         //分割-，判断用途
         const arr = data.split('-');
         const [key, id] = arr;
-        console.log(arr)
+        console.log(key)
+        console.log(id)
         
         const filter = { id : id }
         const list = await this.get(filter)
-        // console.log(list)
+        console.log(list)
         // 在这里根据用户的响应执行相应的操作
         if (key == 'del') {
             if (id == list.id) {
