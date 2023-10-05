@@ -48,7 +48,7 @@ export default class model extends SQLiteDatabase {
             return query[0];
         }
 
-        return null; // 如果查询结果为空，返回 null
+        return []; // 如果查询结果为空，返回 null
     }
 
 
