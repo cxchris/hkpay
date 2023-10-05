@@ -13,7 +13,7 @@ export default class model extends SQLiteDatabase {
 
         const placeholders = keys.map(() => '?').join(', ');
         const sql = `INSERT INTO ${this.tableName} (${keys.join(', ')}) VALUES (${placeholders})`;
-        console.log(values)
+        // console.log(values)
 
         try {
             const result = await this.run(sql, values);
