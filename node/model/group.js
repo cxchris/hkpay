@@ -6,7 +6,8 @@ const permissionId = [5256774376]; //被允许私人访问的
 const commandList = [
     'start',
     'grouplist',
-    'groupadd'
+    'groupadd',
+    'groupdel',
 ];
 
 export default class GroupModel extends model { 
@@ -17,18 +18,15 @@ export default class GroupModel extends model {
 
     async grouplist(chatInfo = {}) {
         // 调用 select 方法
-        const where = 'WHERE 1 = ?'; // 查询条件，可以根据需要修改
-        const params = [1]; // 参数，可以根据需要修改
-        
-        const query = await this.select(where, params);
+        const query = await this.select();
         
         // console.log(query)
         let data = query.map(item => ({
             text: item.group_name,
-            callback_data: item.id
+            callback_data: 'list-'+item.id
         }));
 
-        setInlineKeybord(data,chatInfo);
+        setInlineKeybord('grouplist',data,chatInfo);
         return query;
     }
 
@@ -55,6 +53,21 @@ export default class GroupModel extends model {
             sendMessage(group_id,'aleady use')
         }
         return res;
+    }
+
+    //删除群组
+    async groupdel(chatInfo = {}) {
+        // 调用 select 方法
+        const query = await this.select();
+        
+        // console.log(query)
+        let data = query.map(item => ({
+            text: item.group_name,
+            callback_data: 'del-'+item.id
+        }));
+
+        setInlineKeybord('groupdel',data,chatInfo);
+        return query;
     }
 
     //消息类型管理,获取基本数据
@@ -107,7 +120,7 @@ export default class GroupModel extends model {
                 throw error[402];
             }
             //私聊不允许访问groupadd
-            if (command == 'groupadd') {
+            if (command == 'groupadd' || command == 'groupdel') {
                 throw error[405];
             }
         } else if (chatType == 'group') {
@@ -136,14 +149,31 @@ export default class GroupModel extends model {
 
     //处理callback
     async callbackQuery(data, chatId) {
-        const filter = { id : data }
+        //分割-，判断用途
+        const arr = data.split('-');
+        const [key, id] = arr;
+        
+        const filter = { id : id }
         const list = await this.get(filter)
-        console.log(list)
+        // console.log(list)
         // 在这里根据用户的响应执行相应的操作
-        if (data == list.id) {
-            sendMessage(chatId, `群名<${list.group_name}>，群id<${list.group_id}>`);
-        } else {
-            sendMessage(chatId, '异常');
+        if (key == 'del') {
+            if (id == list.id) {
+                //删除这个记录
+                const filters = { id: id }; // 要删除 id 为 1 的记录
+                this.delete(filters)
+                sendMessage(chatId, `删除成功！<${list.group_name}>`);
+                const chatInfo = {id: chatId}
+                await this.grouplist(chatInfo)
+            } else {
+                sendMessage(chatId, '异常');
+            }
+        } else if (key == 'list') {
+            if (id == list.id) {
+                sendMessage(chatId, `群名<${list.group_name}>，群id<${list.group_id}>`);
+            } else {
+                sendMessage(chatId, '异常');
+            }
         }
     }
 }

@@ -56,9 +56,18 @@ export default class model extends SQLiteDatabase {
     }
 
     // 查询数据
-    async select(where = '', params = []) {
+    async select(filters = {}) {
+        let where = '';
+        const params = [];
+
+        if (Object.keys(filters).length > 0) {
+            const fields = Object.keys(filters);
+            const conditions = fields.map(field => `${field} = ?`);
+            where = `WHERE ${conditions.join(' AND ')}`;
+            params.push(...Object.values(filters));
+        }
+
         const sql = `SELECT * FROM ${this.tableName} ${where}`;
-        // console.log(params)
 
         try {
             const result = await this.query(sql, params);
@@ -67,6 +76,8 @@ export default class model extends SQLiteDatabase {
             throw error;
         }
     }
+
+
 
     // 更新数据
     async update(data, where = '', params = []) {
@@ -85,8 +96,16 @@ export default class model extends SQLiteDatabase {
     }
 
     // 删除数据
-    async delete(where = '', params = []) {
-        const sql = `DELETE FROM ${this.tableName} ${where}`;
+    async delete(filters = {}) {
+        const fields = Object.keys(filters);
+        const params = Object.values(filters);
+
+        if (fields.length === 0) {
+            throw new Error('请提供要删除的字段和值');
+        }
+
+        const where = fields.map(field => `${field} = ?`).join(' AND ');
+        const sql = `DELETE FROM ${this.tableName} WHERE ${where}`;
 
         try {
             const result = await this.run(sql, params);
@@ -95,4 +114,5 @@ export default class model extends SQLiteDatabase {
             throw error;
         }
     }
+
 }

@@ -37,10 +37,11 @@ export async function getChatAdmins(chatId) {
  * @param {*} list 
  * @param {*} msg 
  */
-export async function setInlineKeybord(list, msg) {
+export async function setInlineKeybord(type, list, msg) {
     let inlineKeyboard = {}
     const chatId = msg.id;
     //循环list，获取keyboard
+    
     const chunkSize = 4;
     const outputArray = splitArray(list, chunkSize);
     // console.log(outputArray)
@@ -53,8 +54,12 @@ export async function setInlineKeybord(list, msg) {
         reply_markup: JSON.stringify(inlineKeyboard)
     };
     // console.log(messageOptions)
+    let title = '列出在用群组：';
+    if (type == 'groupdel') {
+        title = '选择要删除的群组：';
+    }
 
-    bot.sendMessage(chatId, '列出在用群组：', messageOptions);
+    bot.sendMessage(chatId, title, messageOptions);
 }
 
 // 用于获取群组名称的异步函数
