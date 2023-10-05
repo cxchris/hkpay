@@ -14,6 +14,7 @@ use app\admin\library\PayGIntegration;
 use think\Log;
 use app\common\Model\PayOrder;
 use app\common\Model\Product;
+use app\common\library\Notice;
 
 /**
  * 个卡安卓回调
@@ -99,6 +100,7 @@ class Upnotice extends Api
                 // exit;
                 if(!$order){
                     //查询丢单，通知bb群组
+                    Notice::send($params);
                     $this->error('order not exist', [],  self::ORDER_NOT_EXIST);
                 }
 
