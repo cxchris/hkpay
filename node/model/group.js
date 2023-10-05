@@ -9,9 +9,10 @@ const commandList = [
     'groupadd',
     'groupdel',
 ];
-
+const databasePath = './sqllitedb/database.db'
+const tableName = 'groups'
 export default class GroupModel extends model { 
-    constructor(databasePath,tableName) {
+    constructor() {
         super(databasePath,tableName);
         // 在构造函数中调用父类构造函数
     }
@@ -44,7 +45,7 @@ export default class GroupModel extends model {
         if (list.length === 0) {
             const data = {
                 group_name : group_name,
-                group_id : group_id
+                group_id : group_id,
             }
             // console.log(data)
             res = await this.insert(data);
@@ -106,7 +107,7 @@ export default class GroupModel extends model {
         //处理text，获得指令
         let command = text.replace(/@.*$/, '');
         command = command.replace('/', '');
-        console.log(command)
+        // console.log(command)
 
         if (command == 'start') {
             //处理开始处理完就不走后面的
@@ -152,12 +153,12 @@ export default class GroupModel extends model {
         //分割-，判断用途
         const arr = data.split('-');
         const [key, id] = arr;
-        console.log(key)
-        console.log(id)
+        // console.log(key)
+        // console.log(id)
         
         const filter = { id : id }
         const list = await this.get(filter)
-        console.log(list)
+        // console.log(list)
         // 在这里根据用户的响应执行相应的操作
         if (key == 'del') {
             if (id == list.id) {

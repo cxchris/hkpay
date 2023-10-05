@@ -3,15 +3,13 @@ import { sendMessage } from '../lib/bot.js';
 import GroupModel from '../model/group.js'; // 根据您的项目结构和路径导入
 
 
-const dbnama = './sqllitedb/database.db';
-const table = 'groups';
 let chatId;
 
-export const webhook = async (req, res) => {
+const webhook = async (req, res) => {
     try {
-        const model = new GroupModel(dbnama, table);
+        const model = new GroupModel();
         const formData = req.body;
-        console.log(formData)
+        // console.log(formData)
 
         //第一步得区分callback还是message类型
         let { chatType, text, fromid, chatInfo, callback_data, formType } = await model.getBaseMessageData(formData);
@@ -40,3 +38,5 @@ export const webhook = async (req, res) => {
         res.error(error.message);
     }
 };
+
+export default webhook
