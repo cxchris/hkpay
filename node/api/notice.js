@@ -16,10 +16,15 @@ const notice = async (req, res) => {
         // 验证签名
         const isValidSignature = verifySign(formData, key);
         if (!isValidSignature) {
-          throw error[401];
+            throw error[401];
         }
         const amount = formData.amount
         const content = formData.content
+
+        //避免回调
+        if (content.includes('掉单通知')) {
+            throw error[406];
+        }
 
         // 获取可用的群，循环发送一次掉单通知
         const model = new GroupModel();
