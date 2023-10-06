@@ -21,6 +21,8 @@ const notice = async (req, res) => {
         const amount = formData.amount
         const content = formData.content
 
+        console.log(content)
+        console.log(content.includes('掉单通知'))
         //避免回调
         if (content.includes('掉单通知')) {
             throw error[406];
