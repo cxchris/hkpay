@@ -104,6 +104,10 @@ export default class GroupModel extends model {
     //处理消息
     async handleMessage(text, chatInfo, chatType, fromid) {
         const chatId = chatInfo.id;
+        if (!/^\/.*/.test(text)) {
+            // 字符串以斜杠 / 开头,执行需要的操作
+            return true;
+        }
         //处理text，获得指令
         let command = text.replace(/@.*$/, '');
         command = command.replace('/', '');
