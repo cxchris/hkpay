@@ -100,7 +100,7 @@ class Upnotice extends Api
                 // exit;
                 if(!$order){
                     //查询丢单，通知bb群组
-                    Notice::send($params);
+                    Notice::send_lost($params);
                     $this->error('order not exist', [],  self::ORDER_NOT_EXIST);
                 }
 

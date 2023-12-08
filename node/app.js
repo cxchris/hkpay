@@ -2,6 +2,7 @@ import express from 'express'
 import { error, successMiddleware, errorMiddleware } from './lib/utils.js'
 import router from './lib/router.js'; 
 import dotenv from 'dotenv';
+import wss from './websocket-server.js'; // 引入WebSocket服务器
 
 dotenv.config();
 

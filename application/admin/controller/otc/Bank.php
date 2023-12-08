@@ -8,6 +8,7 @@ use think\Validate;
 use fast\Sign;
 use fast\Http;
 use think\Log;
+use app\common\model\Bank as bankModel;
 
 /**
  * 銀行卡收款账户
@@ -42,7 +43,7 @@ class Bank extends Backend
         $banklistName = [0 => __('None')];
         $banklist = model('bank')->where('status',1)->select();
         foreach ($banklist as $v) {
-            $banklistName[$v['id']] = $v['name'];
+            $banklistName[$v['id']] = $v['name'].'-'.bankModel::NoticeType[$v['notice_type']];
         }
         // dump($collectionName);exit;
         $this->view->assign("collectionName", $collectionName);
@@ -164,7 +165,7 @@ class Bank extends Backend
                 }
                 $this->success();
             }
-            $this->error(__('Parameter %s can not be empty', ''));
+            $this->error(__('Parameter %s can not be empty'));
         }
         return $this->view->fetch();
     }
@@ -201,7 +202,7 @@ class Bank extends Backend
                 }
                 $this->success();
             }
-            $this->error(__('Parameter %s can not be empty', ''));
+            $this->error(__('Parameter %s can not be empty'));
         }
         
         $this->view->assign("row", $row);

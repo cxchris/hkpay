@@ -140,4 +140,11 @@ class Index extends Backend
         return $html;
     }
 
+    public function notice(){
+        $result = [
+            'type' => 1
+        ];
+        return json($result);
+    }
+
 }

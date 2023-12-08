@@ -9,6 +9,7 @@ use fast\Sign;
 use fast\Http;
 use think\Log;
 use app\admin\library\Paytm;
+use app\common\model\NoticeNum;
 
 /**
  * 代付订单
@@ -38,7 +39,6 @@ class Payment extends Backend
      */
     public function index()
     {
-
         //设置过滤方法
         $this->request->filter(['strip_tags', 'trim']);
         if ($this->request->isAjax()) {
@@ -132,6 +132,8 @@ class Payment extends Backend
             $extend = [];
             if($this->group_id != self::MERCHANT_GROUP){
                 $extend = $this->getExtendData($timewhere,$statuswhere,$where);
+                //重置notice的数量为0，并且插入
+                NoticeNum::getAllExtend($extend,NoticeNum::TYPE_2);
             }
             
             $result = array("total" => $list->total(), "rows" => $items, "extend" => $extend);

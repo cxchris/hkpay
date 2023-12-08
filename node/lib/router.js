@@ -1,16 +1,18 @@
 import express from 'express';
-import { lostOder } from '../api/data.js'; // 调整导入路径
-import webhook from '../api/webhook.js'; // 调整导入路径
-import notice from '../api/notice.js'; // 调整导入路径
+import { callWeb } from '../api/widthdraw.js'; // 调整导入路径
+import webhook from '../api/webhook.js';
+import notice from '../api/notice.js';
+import translate from '../api/translate.js';
 
 import bodyParser from 'body-parser';
 
 const router = express.Router();
 
 const list = [
-  { method: 'GET', route: '/data/lostOder', handler: lostOder, type: 'urlencoded'},  //test
+  { method: 'POST', route: '/widthdraw/callWeb', handler: callWeb, type: 'urlencoded'},  //收到订单
   { method: 'POST', route: '/telegram-webhook', handler: webhook, type: 'json' },  //飞机webhook
   { method: 'POST', route: '/notice', handler: notice, type: 'urlencoded' },  //监听丢单通知并推送至飞机群bot
+  { method: 'GET', route: '/translate', handler: translate, type: 'urlencoded' },  //翻译
 ];
 
 

@@ -16,11 +16,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             //当表格数据加载完成时
             table.on('load-success.bs.table', function (e, json) {
                 // console.log(json)
-                $("#money").text(json.extend.money);
-                $("#total").text(json.extend.total);
-                $("#price").text(json.extend.price);
-                $("#tax").text(json.extend.tax);
-                $("#rate").text(json.extend.rate);
+                if (group_id == 1 || group_id == 3) {
+                    //上层框架去操作红点逻辑
+                    const data = {
+                        action: 'getPullRightContainer',
+                        notice_total: json.extend.notice_total,
+                        lost_num: json.extend.lost_num,
+                        receive_num: json.extend.receive_num,
+                    }
+                    window.parent.postMessage(data, '*');
+
+                    $("#money").text(json.extend.money);
+                    $("#total").text(json.extend.total);
+                    $("#price").text(json.extend.price);
+                    $("#tax").text(json.extend.tax);
+                    $("#rate").text(json.extend.rate);
+                }
+                
             });
 
             table.on('post-body.bs.table', function (e, settings, json, xhr) {
@@ -262,7 +274,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 operate: {
                     'click .btn-notice': function (e, value,row,index) {
                         var that = this;
-                        var table = $(that).closest('table'); 
+                        var table = $(that).closest('table');
                         var options = table.bootstrapTable('getOptions');
                         var load = Layer.confirm('是否给下游商户重新发起一次回调', function (text, index) {
                             if($.trim(text)==''){
@@ -297,7 +309,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     },
                     'click .btn-reject': function (e, value,row,index) {
                         var that = this;
-                        var table = $(that).closest('table'); 
+                        var table = $(that).closest('table');
                         var options = table.bootstrapTable('getOptions');
 
                         var load = Layer.confirm('是否驳回该订单，驳回后将回退<span style="color:red;">'+row.reduce_money+'</span>至商户代付余额', function (text, index) {
@@ -333,7 +345,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     },
                     'click .btn-update': function (e, value,row,index) {
                         var that = this;
-                        var table = $(that).closest('table'); 
+                        var table = $(that).closest('table');
                         var options = table.bootstrapTable('getOptions');
                         // console.log(row)
 

@@ -8,6 +8,7 @@ use think\Validate;
 use fast\Sign;
 use fast\Http;
 use think\Log;
+use app\common\model\Bank;
 
 /**
  * 可用銀行包管理
@@ -28,7 +29,8 @@ class pkg extends Backend
     public function _initialize()
     {
         parent::_initialize();
-        $this->model = model('bank');
+        $this->model = new Bank();
+        $this->view->assign("noticeList", Bank::NoticeType);
     }
 
     /**
@@ -138,7 +140,7 @@ class pkg extends Backend
                 }
                 $this->success();
             }
-            $this->error(__('Parameter %s can not be empty', ''));
+            $this->error(__('Parameter %s can not be empty'));
         }
         return $this->view->fetch();
     }
@@ -175,7 +177,7 @@ class pkg extends Backend
                 }
                 $this->success();
             }
-            $this->error(__('Parameter %s can not be empty', ''));
+            $this->error(__('Parameter %s can not be empty'));
         }
         
         $this->view->assign("row", $row);
@@ -214,6 +216,15 @@ class pkg extends Backend
             }
         }
         $this->error(__('You have no permission'));
+    }
+
+    /**
+     * 类型json
+     */
+    public function typeList(){
+        $res = Bank::NoticeType;
+        // dump($res);exit;
+        return json($res);
     }
     
 }

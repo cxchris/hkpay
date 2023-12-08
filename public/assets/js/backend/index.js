@@ -1,6 +1,16 @@
 define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], function ($, undefined, Backend, undefined, AdminLTE, Form) {
     var Controller = {
         index: function () {
+            let _this = this;
+            $(document).ready(function () {
+                //判断权限，只有管理员和客服可以
+                if (Config.admin.group_id == 1 || Config.admin.group_id == 3) {
+                    // 连接到WebSocket服务器
+                    _this.startWebsocket();
+                }
+                
+            });
+
             //双击重新加载页面
             $(document).on("dblclick", ".sidebar-menu li > a", function (e) {
                 $("#con_" + $(this).attr("addtabs") + " iframe").attr('src', function (i, val) {
@@ -414,6 +424,95 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
             }, function (data) {
                 $("input[name=captcha]").next(".input-group-addon").find("img").trigger("click");
             });
+        },
+
+        /**
+         * 开始连接websocket
+         */
+        startWebsocket: function () {
+            const _this = this;
+            const port = 8080;
+
+            function connectWebSocket() {
+                const socket = new WebSocket(`ws://localhost:${port}`);
+
+                // 监听WebSocket连接打开事件
+                socket.addEventListener('open', (event) => {
+                    console.log('WebSocket connection opened');
+                });
+
+                // 监听WebSocket消息事件
+                socket.addEventListener('message', (event) => {
+                    const result = JSON.parse(event.data);
+                    console.log('Received message:', result);
+
+                    if (result.total != 0) {
+                        var menu_html = '<span class="badge" id="timimsg_num" style="background-color: red;">'+result.total+'</span>';
+                        $('[pinyin="dingdanguanli"] .pull-right-container').html(menu_html);
+                    }
+                    
+                    if (result.lost_num != 0) { 
+                        var lost_notice_html = '<small class="label pull-right bg-yellow">'+result.lost_num+'</small>';
+                        $('[pinyin="daishoudingdan"] .pull-right-container').html(lost_notice_html);
+                    }
+                    
+                    if (result.receive_num != 0) { 
+                        var df_notice_html = '<small class="label pull-right bg-green">'+result.receive_num+'</small>';
+                        $('[pinyin="daifudingdan"] .pull-right-container').html(df_notice_html);
+                    }
+                    
+                    /**
+                     * 1-掉单
+                     * 2-收到订单
+                     */
+                    if (result.type == 1) {
+                        parent.Toastr.warning(result.msg); // 弹出提醒
+                    } else if (result.type == 2) {
+                        parent.Toastr.success(result.msg); // 弹出提醒
+                    }
+                    _this.playSound(); // 播放提醒声音
+                });
+
+                // 监听WebSocket关闭事件
+                socket.addEventListener('close', (event) => {
+                    console.log('WebSocket connection closed');
+                    // 重新连接，可以添加一些延时
+                    setTimeout(connectWebSocket, 2000); // 2秒后尝试重新连接
+                });
+            }
+
+            // 初次连接
+            connectWebSocket();
+        },
+
+        /**
+         * 音频
+         */
+        playSound: async function () {
+            // let iframe = document.createElement('iframe');
+            // iframe.src="/assets/audio/tips.mp3";
+            // document.body.appendChild(iframe);
+            var borswer = window.navigator.userAgent.toLowerCase();
+            if (borswer.indexOf("ie") >= 0) {
+                //IE内核浏览器
+                var strEmbed = '<embed name="embedPlay" src="/assets/audio/tips.mp3" autostart="true" hidden="true" loop="false"></embed>';
+                if ($("body").find("embed").length <= 0)
+                    $("body").append(strEmbed);
+                var embed = document.embedPlay;
+
+                //浏览器不支持 audion，则使用 embed 播放
+                embed.volume = 100;
+            } else {
+                //非IE内核浏览器
+                var strAudio = "<audio id='audioPlay' src='/assets/audio/tips.mp3' hidden='true'>";
+
+                if ($("#audioPlay").length <= 0) {
+                    $("body").append(strAudio);
+                }
+                var audio = document.getElementById("audioPlay");
+                //浏览器支持 audio
+                audio.play();
+            }
         }
     };
 

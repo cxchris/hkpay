@@ -10,6 +10,7 @@ use fast\Http;
 use fast\Random;
 use fast\Sign;
 use app\admin\library\CommonPayment;
+use app\common\library\Notice;
 
 /*use app\admin\library\Freepaytm;
 use app\admin\library\Kirin;
@@ -315,6 +316,9 @@ class Apply extends Api
                             }
                         }
                     }
+
+                    //6,接受到订单，通知后台前端
+                    Notice::send_df($cond);
 
                     Db::commit();
                 } catch (\Exception $e) {

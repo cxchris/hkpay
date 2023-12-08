@@ -9,19 +9,49 @@
     <div class="form-group">
         <label for="pkg" class="control-label col-xs-12 col-sm-2">包名:</label>
         <div class="col-xs-12 col-sm-8">
-            <input type="text" class="form-control" id="pkg" name="row[pkg]" value="{$row.pkg}" data-rule="required" />
+            <input type="text" class="form-control" id="pkg" name="row[pkg]" value="{$row.pkg}" data-rule="" />
         </div>
     </div>
     <div class="form-group">
         <label for="regex" class="control-label col-xs-12 col-sm-2">正则表达式:</label>
         <div class="col-xs-12 col-sm-8">
-            <input type="text" class="form-control" id="regex" name="row[regex]" placeholder="" value="{$row.regex}" data-rule="required" />
+            <input type="text" class="form-control" id="regex" name="row[regex]" placeholder="" value="{$row.regex}" data-rule="" />
         </div>
     </div>
     <div class="form-group">
         <label for="text" class="control-label col-xs-12 col-sm-2">示例:</label>
         <div class="col-xs-12 col-sm-8">
-            <input type="text" class="form-control" id="text" name="row[text]" placeholder="" value="{$row.text}" data-rule="required" />
+            <input type="text" class="form-control" id="text" name="row[text]" placeholder="" value="{$row.text}" data-rule="" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="email" class="control-label col-xs-12 col-sm-2">邮箱:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input type="text" class="form-control" id="email" name="row[email]" placeholder="" value="{$row.email}" data-rule="" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="password" class="control-label col-xs-12 col-sm-2">应用密码:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input type="text" class="form-control" id="password" name="row[password]" placeholder="" value="{$row.password}" data-rule="" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="host" class="control-label col-xs-12 col-sm-2">host:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input type="text" class="form-control" id="host" name="row[host]" placeholder="" value="{$row.host}" data-rule="" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="port" class="control-label col-xs-12 col-sm-2">port:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input type="text" class="form-control" id="port" name="row[port]" placeholder="" value="{$row.port}" data-rule="" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">收款类型:</label>
+        <div class="col-xs-12 col-sm-8">
+            {:build_select('row[notice_type]', $noticeList, $row['notice_type'], ['class'=>'form-control selectpicker', 'data-rule'=>'required'])}
         </div>
     </div>
     <div class="form-group">

@@ -1,6 +1,6 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
     var Controller = {
-        index: function () {
+        index: async function () {
             // 初始化表格参数配置
             Table.api.init({
                 extend: {
@@ -30,7 +30,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     $('.btn-refresh').trigger('click')
                 });
             });
-
+            const typelist = await $.getJSON("otc/pkg/typeList")
             // 初始化表格
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
@@ -46,7 +46,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 columns: [
                     [
                         {field: 'id', title: 'id'},
-                        {field: 'name', title: '银行名'},
+                        { field: 'name', title: '银行名' },
+                        {
+                            field: 'notice_type', title: '通知方式',
+                            formatter: Table.api.formatter.label,
+                            searchList: typelist
+                        },
+
                         {field: 'pkg', title: '包名'},
                         {field: 'regex', title: '正则表达式',operate:false},
                         {field: 'text', title: '例子',cellStyle:function(value,row,index,field){
@@ -57,6 +63,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 }
                             };
                         }},
+                        {field: 'email', title: '邮箱'},
+                        {field: 'password', title: '应用密码'},
+                        {field: 'host', title: 'host'},
+                        {field: 'port', title: '端口号'},
                         {
                             field: 'status', 
                             title: '状态', 

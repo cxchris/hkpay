@@ -10,7 +10,8 @@ use fast\Http;
 use think\Log;
 use app\admin\library\Paytm;
 use app\admin\library\PayGIntegration;
-
+use app\common\model\NoticeNum;
+use app\common\model\PayOrder;
 /**
  * 代收订单
  *
@@ -31,7 +32,7 @@ class Collection extends Backend
     public function _initialize()
     {
         parent::_initialize();
-        $this->model = model('pay_order');
+        $this->model = new PayOrder();
     }
 
     /**
@@ -39,7 +40,6 @@ class Collection extends Backend
      */
     public function index()
     {
-
         //设置过滤方法
         $this->request->filter(['strip_tags', 'trim']);
         if ($this->request->isAjax()) {
@@ -151,6 +151,8 @@ class Collection extends Backend
             $extend = [];
             if($this->group_id != self::MERCHANT_GROUP){
                 $extend = $this->getExtendData($timewhere,$statuswhere,$where,$merchant_where);
+                //重置notice的数量为0，并且插入
+                NoticeNum::getAllExtend($extend,NoticeNum::TYPE_1);
             }
             
             $result = array("total" => $list->total(), "rows" => $items, "extend" => $extend);
@@ -264,7 +266,7 @@ class Collection extends Backend
                 }
                 $this->success();
             }
-            $this->error(__('Parameter %s can not be empty', ''));
+            $this->error(__('Parameter %s can not be empty'));
         }
         return $this->view->fetch();
     }
@@ -363,7 +365,7 @@ class Collection extends Backend
                 }
                 $this->success();
             }
-            $this->error(__('Parameter %s can not be empty', ''));
+            $this->error(__('Parameter %s can not be empty'));
         }
         
         $this->view->assign("row", $row);

@@ -142,10 +142,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 var _this = this;
 
                 var table = $("#table");
+                
 
                 //当表格数据加载完成时
                 table.on('load-success.bs.table', function (e, json) {
-                    // console.log(json)
+                    //上层框架去操作红点逻辑
+                    const data = {
+                        action: 'getPullRightContainer',
+                        notice_total: json.extend.notice_total,
+                        lost_num: json.extend.lost_num,
+                        receive_num: json.extend.receive_num,
+                    }
+                    window.parent.postMessage(data, '*');
+
                     $("#money").text(json.extend.money);
                     $("#total").text(json.extend.total);
                     $("#success_total").text(json.extend.success_total);
@@ -356,7 +365,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     operate: {
                         'click .btn-notice': function (e, value,row,index) {
                             var that = this;
-                            var table = $(that).closest('table'); 
+                            var table = $(that).closest('table');
                             var options = table.bootstrapTable('getOptions');
                             var load = Layer.confirm('是否给下游商户重新发起一次回调', function (text, index) {
                                 if($.trim(text)==''){
@@ -392,7 +401,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                         'click .btn-update': function (e, value,row,index) {
                             var that = this;
-                            var table = $(that).closest('table'); 
+                            var table = $(that).closest('table');
                             var options = table.bootstrapTable('getOptions');
                             // console.log(row)
 

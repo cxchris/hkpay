@@ -89,7 +89,12 @@ export const getSign = (params, key = '') => {
     return res;
 };
 
-// 验证签名
+/**
+ * 
+ * @param {*} params 参数
+ * @param {*} key  key
+ * @returns 
+ */
 export const verifySign = (params, key = '') => {
   const sign = params.sign;
   delete params.sign;
