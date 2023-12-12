@@ -54,38 +54,94 @@
         {include file="common/script" /}
     </body>
 </html>
-<script>
-    window.addEventListener('message', function (event) {
-        // 接收到消息后执行相应操作
-        var receivedData = event.data;
-        const { action,notice_total,lost_num,receive_num } = receivedData;
+<script defer>
+window.addEventListener("DOMContentLoaded", async function() {
+    const baseUrl = "{$baseUrl}";
+    // 在DOM加载完成后执行的代码
+    console.log("进入第一次刷新")
+    try {
+        // 使用await等待异步操作完成
+        const response = await fetch(baseUrl+"/index/notice");
 
-        if (action === 'getPullRightContainer') {
-            const total_selctor = $('[pinyin="dingdanguanli"] .pull-right-container'); //订单管理的控制器
-            const lost_selctor = $('[pinyin="daishoudingdan"] .pull-right-container'); //代收订单的控制器
-            const df_selctor = $('[pinyin="daifudingdan"] .pull-right-container'); //代付订单的控制器
-            if(notice_total == 0){
-                total_selctor.empty()
-            }else{
-                var menu_html = '<span class="badge" id="timimsg_num" style="background-color: red;">'+notice_total+'</span>';
-                total_selctor.html(menu_html);
-            }
-
-            if(lost_num == 0){
-                lost_selctor.empty()
-            }else{
-                var menu_html = '<small class="label pull-right bg-yellow">'+lost_num+'</small>';
-                lost_selctor.html(menu_html);
-            }
-
-            if(receive_num == 0){
-                df_selctor.empty()
-            }else{
-                var menu_html = '<small class="label pull-right bg-green">'+receive_num+'</small>';
-                df_selctor.html(menu_html);
-            }
-            
+        // 检查网络请求是否成功（状态码为200-299）
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
-    });
 
+        // 将响应解析为JSON格式
+        const data = await response.json();
+        const { lost_num,receive_num } = data;
+        const notice_total = eval(lost_num + receive_num);
+        show_notice(notice_total,lost_num,receive_num);
+
+        // 处理获取的数据
+        // console.log(data);
+    } catch (error) {
+        // 处理错误
+        console.error('Fetch error:', error);
+    }
+});
+
+
+window.addEventListener('message', function (event) {
+    // 接收到消息后执行相应操作
+    var receivedData = event.data;
+    const { action,notice_total,lost_num,receive_num } = receivedData;
+
+    if (action === 'getPullRightContainer') {
+        //渲染notice
+        show_notice(notice_total,lost_num,receive_num);
+
+    }
+});
+
+function show_notice(notice_total, lost_num, receive_num) {
+    console.log('渲染notice');
+
+    // 订单管理的控制器
+    const total_selector = document.querySelector('[pinyin="dingdanguanli"] .pull-right-container');
+
+    // 代收订单的控制器
+    const lost_selector = document.querySelector('[pinyin="daishoudingdan"] .pull-right-container');
+
+    // 代付订单的控制器
+    const df_selector = document.querySelector('[pinyin="daifudingdan"] .pull-right-container');
+
+    // 移除元素
+    const removeElement = function(selector) {
+        selector.innerHTML = '';
+        if(selector == total_selector){
+            selector.innerHTML = '<i class="fa fa-angle-left"></i>';
+        }
+    };
+
+    // 渲染内容
+    const renderContent = function(selector, content) {
+        selector.innerHTML = content;
+    };
+
+    // 渲染订单管理
+    if (notice_total == 0) {
+        removeElement(total_selector);
+    } else {
+        const menu_html = '<span class="badge" id="timimsg_num" style="background-color: red;">' + notice_total + '</span>';
+        renderContent(total_selector, menu_html);
+    }
+
+    // 渲染代收订单
+    if (lost_num == 0) {
+        removeElement(lost_selector);
+    } else {
+        const menu_html = '<small class="label pull-right bg-yellow">' + lost_num + '</small>';
+        renderContent(lost_selector, menu_html);
+    }
+
+    // 渲染代付订单
+    if (receive_num == 0) {
+        removeElement(df_selector);
+    } else {
+        const menu_html = '<small class="label pull-right bg-green">' + receive_num + '</small>';
+        renderContent(df_selector, menu_html);
+    }
+}
 </script>

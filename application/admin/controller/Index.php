@@ -8,6 +8,7 @@ use think\Config;
 use think\Hook;
 use think\Session;
 use think\Validate;
+use app\common\model\NoticeNum;
 
 /**
  * 后台首页
@@ -53,6 +54,16 @@ class Index extends Backend
                 $this->success('', null, ['menulist' => $menulist, 'navlist' => $navlist]);
             }
         }
+        
+        // 获取当前请求的完整URL
+        $currentUrl = $this->request->url(true);
+
+        // 截取控制器和方法之前的部分，即获取基础的URL
+        $baseUrl = rtrim($currentUrl, $this->request->action() . '/' . $this->request->controller());
+
+        // 将基础URL传递给前端模板
+        $this->view->assign('baseUrl', $baseUrl);
+
         $this->assignconfig('cookie', ['prefix' => config('cookie.prefix')]);
         $this->view->assign('menulist', $menulist);
         $this->view->assign('navlist', $navlist);
@@ -140,10 +151,12 @@ class Index extends Backend
         return $html;
     }
 
+    /**
+     * 获取当前的消息数量
+     * @return \think\response\Json
+     */
     public function notice(){
-        $result = [
-            'type' => 1
-        ];
+        $result = NoticeNum::getSumByType();
         return json($result);
     }
 
