@@ -431,10 +431,10 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
          */
         startWebsocket: function () {
             const _this = this;
-            const port = 8080;
+            // const port = 8080;
 
             function connectWebSocket() {
-                const socket = new WebSocket(`ws://localhost:${port}`);
+                const socket = new WebSocket(`wss://onepayhk.com/ws`);
 
                 // 监听WebSocket连接打开事件
                 socket.addEventListener('open', (event) => {
