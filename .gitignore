@@ -9,6 +9,9 @@
 /public/assets/addons/*
 /public/uploads/*
 /node/node_modules/*
+/node/config/*
+/node/script/*
+/node/logs/*
 .idea
 composer.lock
 *.log

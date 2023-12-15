@@ -18,17 +18,17 @@ class Pmapi{
     }
 
     public function info($arrData = array()) {
-        $this->operate = 'info';
+        $this->operate = 'getlist';
         return $this->performOperation($arrData);
     }
 
     public function stop($arrData = array()) {
-        $this->operate = 'stop';
+        $this->operate = 'pmStop';
         return $this->performOperation($arrData);
     }
 
     public function start($arrData = array()) {
-        $this->operate = 'start';
+        $this->operate = 'pmStart';
         return $this->performOperation($arrData);
     }
 
@@ -40,19 +40,21 @@ class Pmapi{
      */
     private function performOperation($arrData = array()) {
         try {
-            $url = Env::get('mail.url', '').'/api/listen/'.$this->operate;
+            $url = Env::get('notice.url', '').'/listen/'.$this->operate;
 
-            $sign = Sign::getSign($arrData,Env::get('mail.key', ''));
+            $sign = Sign::getSign($arrData,Env::get('notice.key', ''));
             $arrData['sign'] = $sign;
 
             // dump($url);
-            // dump($arrData);exit;
+            // dump($arrData);
             $res = Http::formpost($url,$arrData);
+            // dump($res);
+            // exit;
 
             if($res){
                 $ret = json_decode($res,true);
                 if($ret){
-                    if(isset($ret['code']) && $ret['code'] == 1){
+                    if(isset($ret['code']) && $ret['code'] == 200){
                         return $ret['data'];
                     }else{
                         throw new \Exception($ret['msg']);

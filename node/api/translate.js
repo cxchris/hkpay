@@ -1,6 +1,4 @@
 //接受通知
-import { logger } from '../lib/log.js';
-import tran from 'translate-google';
 
 
 const translate = async (req, res) => {

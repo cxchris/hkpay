@@ -89,20 +89,21 @@ class pkg extends Backend
                 ->paginate($limit);
             // echo $this->model->getLastsql();echo '<br>';echo '<br>';exit;
 
-
+            $arr = Pmapi::pm2()->info();
+            // dump($arr);
+            // exit;
             $items = $list->items();
             foreach ($items as $k => $v) {
                 $items[$k]['create_time'] = datevtime($v['create_time']);
 
                 if($v['notice_type'] == Bank::MAIL_TYPE){
                     //获取状态
-                    $cond = [
-                        'id' => $v['id'],
-                    ];
-                    $res = Pmapi::pm2()->info($cond);
+                    $matchingArr = array_filter($arr, function($row) use ($v) {
+                        return $row["name"] == $v["id"] && $row['status'] == 'online';
+                    });
                     // dump($res);
                     // exit;
-                    if(isset($res['pid']) && $res['pid'] != 0){
+                    if (!empty($matchingArr)) {
                         $status = 1;
                     }else{
                         $status = 0;

@@ -1,4 +1,6 @@
 import md5 from 'md5';
+import { writeFile } from 'fs/promises';
+import path from 'path';
 
 /**
  * 成功响应函数
@@ -114,4 +116,102 @@ export const splitArray = (arr, chunkSize) => {
   }
   
   return result;
+}
+
+//table转json
+export const tojson = (input) => {
+  const trimmedString = input.trim();
+  const lines = trimmedString.split('\n');
+  const headers = lines[1].split('│').map(header => header.trim()).filter(header => header.length > 0);
+  const tableData = [];
+
+  for (let i = 3; i < lines.length - 1; i++) {
+    const cells = lines[i].split('│').map(cell => cell.trim()).filter(cell => cell.length > 0);
+    const rowData = {};
+
+    for (let j = 0; j < headers.length; j++) {
+      rowData[headers[j]] = cells[j];
+    }
+
+    tableData.push(rowData);
+  }
+
+  const jsonData = JSON.stringify(tableData, null, 2);
+  return jsonData;
+}
+
+
+/**
+ * 写入json文件到config目录
+ * @param {string} id 
+ * @param {string} key 
+ * @param {string} egex 
+ */
+export async function writeJson(id, key, egex) { 
+    const config = {
+        id,
+        key,
+        egex
+    };
+
+    const configFilePath = `./config/${id}.json`; // 请根据实际需求修改文件路径
+
+    try {
+        // 将 JSON 对象转换为字符串
+        const configString = JSON.stringify(config, null, 2); // 2 表示缩进两个空格
+
+        // 将字符串写入文件
+        await writeFile(configFilePath, configString);
+
+        // console.log('Config file has been written successfully.');
+    } catch (error) {
+        throw error;
+    }
+}
+
+/**
+ * 去除后缀的文件名
+ * @param currentFileUrl 
+ * @returns 
+ */
+export function getfilename(currentFileUrl) {
+  const currentFileName = path.parse(currentFileUrl).name;
+  return currentFileName;
+}
+
+
+/**
+ * 编译脚本并且重启脚本
+ */
+export async function writeScript(id, config) {
+    try {
+        const content = JSON.stringify(config, null, 4)
+        const name = `${id}.js`
+        const fileName = `./script/${name}`;
+        const fileContent =
+`import { readEmailListener } from '../lib/emailListener.js';
+import Logger from '../lib/logger.js';
+import { getfilename } from '../lib/utils.js';
+
+const currentFileUrl = import.meta.url;
+const _name = getfilename(currentFileUrl);
+
+const logger = new Logger(_name);
+
+const config = ${content};
+
+// console.log('配置文件内容:', config);
+try {
+    readEmailListener(config, _name);
+} catch (err) {
+    logger.error('运行mail listener出错:' + err);
+}
+`;
+        // 写入 TypeScript 文件
+        await writeFile(fileName, fileContent);
+
+    } catch (error) {
+        console.error(`Error creating and compiling TypeScript file: ${error}`);
+        throw error;
+    }
 }

@@ -1,4 +1,3 @@
-import { logger } from '../lib/log.js';
 import { sendMessage } from '../lib/bot.js';
 import GroupModel from '../model/group.js'; // 根据您的项目结构和路径导入
 

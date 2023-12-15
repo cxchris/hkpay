@@ -3,6 +3,7 @@ import { callWeb } from '../api/widthdraw.js'; // 调整导入路径
 import webhook from '../api/webhook.js';
 import notice from '../api/notice.js';
 import translate from '../api/translate.js';
+import { getlist,pmStart,pmStop } from '../api/listen.js';
 
 import bodyParser from 'body-parser';
 
@@ -13,6 +14,9 @@ const list = [
   { method: 'POST', route: '/telegram-webhook', handler: webhook, type: 'json' },  //飞机webhook
   { method: 'POST', route: '/notice', handler: notice, type: 'urlencoded' },  //监听丢单通知并推送至飞机群bot
   { method: 'GET', route: '/translate', handler: translate, type: 'urlencoded' },  //翻译
+  { method: 'POST', route: '/listen/getlist', handler: getlist, type: 'urlencoded' },  //邮件-pm2列表
+  { method: 'POST', route: '/listen/pmStart', handler: pmStart, type: 'urlencoded' },  //邮件-pm2开始
+  { method: 'POST', route: '/listen/pmStop', handler: pmStop, type: 'urlencoded' },  //邮件-pm2结束
 ];
 
 
