@@ -47,26 +47,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     [
                         {field: 'id', title: 'id'},
                         { field: 'name', title: '银行名' },
-                        {
-                            field: 'notice_type', title: '通知方式',
-                            formatter: Table.api.formatter.label,
-                            searchList: typelist
-                        },
-
-                        {field: 'pkg', title: '包名'},
-                        {field: 'regex', title: '正则表达式',operate:false},
-                        {field: 'text', title: '例子',cellStyle:function(value,row,index,field){
-                            return {
-                                css: {
-                                    "max-width": "500px",
-                                    "white-space": "normal",
-                                }
-                            };
-                        }},
-                        {field: 'email', title: '邮箱'},
-                        {field: 'password', title: '应用密码'},
-                        {field: 'host', title: 'host'},
-                        {field: 'port', title: '端口号'},
+                        
                         {
                             field: 'status', 
                             title: '状态', 
@@ -74,6 +55,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             custom: {0: 'error', 1: 'success'},
                             searchList: {0: '关闭',1: '启用'}
                         },
+                        {
+                            field: 'notice_type', title: '通知方式',
+                            formatter: Table.api.formatter.label,
+                            searchList: typelist
+                        },
+
+                        {field: 'pkg', title: '包名'},
+                        {field: 'email', title: '邮箱'},
+                        {field: 'regex', title: '正则表达式',operate:false},
+                        {field: 'text', title: '例子'},
+                        {field: 'password', title: '应用密码'},
+                        {field: 'host', title: 'host'},
+                        {field: 'port', title: '端口号'},
 
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, 
                             formatter: function (value, row, index) {

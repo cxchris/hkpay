@@ -38,7 +38,6 @@ class Upnotice extends Api
     protected $success_code = '200'; //成功码
     protected $link = ''; //平台跳转地址
     protected $akey = 'qwerty';
-    protected $t_callbackUrl = 'https://ydapppay.com/ydpay/api/Pay/callback'; //上游通知地址
     protected $callbackUrl = 'https://www.google.com';//跳转给用户的前端页面
     protected $key = 'B3iYKkRHlmUanQGaNMIJziWOkNN9dECQQD';
 
