@@ -61,12 +61,12 @@ window.addEventListener("DOMContentLoaded", async function() {
     let secureBaseUrl;
 
     // 判断 URL 是否以 "http" 开头
-    if (currentURL.startsWith('http')) {
+    if (currentURL.startsWith('https')) {
+        // console.log('当前页面的 URL 不以 "http" 开头');
+        secureBaseUrl = baseUrl.replace(/^http:/, 'https:');
+    } else {
         // console.log('当前页面的 URL 以 "http" 开头');
         secureBaseUrl = baseUrl;
-    } else {
-        secureBaseUrl = baseUrl.replace(/^http:/, 'https:');
-        // console.log('当前页面的 URL 不以 "http" 开头');
     }
     
     // 在DOM加载完成后执行的代码
