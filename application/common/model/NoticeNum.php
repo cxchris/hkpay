@@ -44,9 +44,9 @@ class NoticeNum extends Model
         if($result){
             foreach ($result as $value) {
                 if ($value['type'] == self::TYPE_1) {
-                    $arr['lost_num'] = $value['total'];
+                    $arr['lost_num'] = (int)$value['total'];
                 } else if($value['type'] == self::TYPE_2){
-                    $arr['receive_num'] = $value['total'];
+                    $arr['receive_num'] = (int)$value['total'];
                 }
             }
         }

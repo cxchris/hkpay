@@ -83,7 +83,7 @@ window.addEventListener("DOMContentLoaded", async function() {
         // 将响应解析为JSON格式
         const data = await response.json();
         const { lost_num,receive_num } = data;
-        const notice_total = eval(lost_num + receive_num);
+        const notice_total = lost_num + receive_num;
         show_notice(notice_total,lost_num,receive_num);
 
         // 处理获取的数据
