@@ -64,9 +64,10 @@ export const pmStart = async (req, res) => {
         const port = formData.port;
         const key = formData.key;
         const egex = formData.egex;
+        const poster = formData.poster;
 
         //写入配置config目录
-        await writeJson(id, key, egex);
+        await writeJson(id, key, egex, poster);
         
         //写入脚本文件
         const config = {

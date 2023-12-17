@@ -42,24 +42,35 @@ export function readEmailListener(config ,_name) {
 
             imap.on('mail', function(numNewMsgs) {
                 logger.info(`收到新邮件: ${numNewMsgs} 封`);
+                // 搜索最新的一封邮件
+                imap.search(['ALL'], function (err, results) {
+                    if (err) throw err;
+                    // console.log(results)
+                    // 如果有邮件
+                    if (results.length > 0) {
+                        // 取最新的一封邮件的序号
+                        const seqno = results[results.length - 1];
+                        // console.log(seqno)
+                        const fetch = imap.fetch(seqno, { bodies: '', struct: true });
 
-                const f = imap.fetch(box.messages.total + ':*', { bodies: '' });
+                        fetch.on('message', function (msg) {
+                            msg.on('body', (stream, info) => {
+                                //解析邮件正文
+                                parseHtml(stream,_name);
+                            });
+                            
+                        });
 
-                // 当获取到邮件时
-                f.on('message', (msg) => {
-                    msg.on('body', (stream, info) => {
-                        //解析邮件正文
-                        // console.log(info)
-                        parseHtml(stream,_name);
-                    });
-                });
+                        fetch.once('error', function (err) {
+                            console.error('获取邮件信息出错:', err);
+                        });
 
-                f.once('error', function(err) {
-                    logger.error('获取邮件信息出错:'+err);
-                });
-
-                f.once('end', function() {
-                    console.log('所有新邮件的信息已获取完毕');
+                        fetch.once('end', function () {
+                            // 不要在这里关闭连接，以便持续监听新邮件
+                        });
+                    } else {
+                        console.log('收件箱为空');
+                    }
                 });
             });
         });
@@ -76,6 +87,11 @@ export function readEmailListener(config ,_name) {
     imap.connect();
 }
 
+/**
+ * 处理邮件正文内容
+ * @param {*} stream 
+ * @param {*} _name 
+ */
 export async function parseHtml(stream, _name) {
     const logger = new Logger(_name);
     simpleParser(stream, async (parseErr, parsed) => {
@@ -89,6 +105,8 @@ export async function parseHtml(stream, _name) {
         const subject = parsed.subject;
         // 获取发件人信息
         const from = parsed.from?.text; // 添加了空值检查
+        // console.log(subject)
+        logger.info('发送者:'+from)
         // 获取纯文本正文
         // const textBody = parsed.text;
         // console.log(parsed)
@@ -108,35 +126,43 @@ export async function parseHtml(stream, _name) {
             let textOfRow = '';
             const keyword = conf.key ?? '';
             const egex = conf.egex ?? '';
-            if (keyword) {
-                //查询邮件关键字找出金额
-                const elementsWithKeyword = $(`body span:contains("${keyword}")`);
+            const poster = conf.poster ?? '';
+            //还需要匹配指定的发送者,为空则没有限定发送者
+            // console.log(poster)
+            // console.log(from.includes(poster))
+            if (poster == '' || from.includes(poster)) {
+                if (keyword) {
+                    //查询邮件关键字找出金额
+                    const elementsWithKeyword = $(`:contains("${keyword}")`);
 
-                if (elementsWithKeyword.length > 0) {
-                    // 遍历包含关键字的元素
-                    elementsWithKeyword.each((index, element) => {
-                        // 获取包含关键字的元素所在的行的文字
-                        textOfRow = $(element).closest('span').text(); // 这里假设是在 <p> 元素中，你可以根据实际情况修改选择器
-                        logger.info(textOfRow)
-                        if (textOfRow != '') {
-                            money = extractMoney(textOfRow,egex)
-                            // console.log(money)
-                        }
-                        // console.log(textOfRow)
-                    });
-                } else {
-                    logger.info(`未找到包含关键字 "${keyword}" 的元素`)
-                }
-
-                if (money != null) {
-                    //提交对应金额到服务器
-                    const data = {
-                        id: _name,
-                        amount: money,
-                        content: textOfRow
+                    if (elementsWithKeyword.length > 0) {
+                        // 遍历包含关键字的元素
+                        elementsWithKeyword.each((index, element) => {
+                            // 获取包含关键字的元素所在的行的文字
+                            textOfRow = $(element).text(); // 这里假设是在 <p> 元素中，你可以根据实际情况修改选择器
+                            logger.info(textOfRow)
+                            if (textOfRow != '') {
+                                money = extractMoney(textOfRow,egex)
+                                // console.log(money)
+                            }
+                            // console.log(textOfRow)
+                        });
+                    } else {
+                        logger.info(`未找到包含关键字 "${keyword}" 的元素`)
                     }
-                    notice(data);
+
+                    if (money != null) {
+                        //提交对应金额到服务器
+                        const data = {
+                            id: _name,
+                            amount: money,
+                            content: textOfRow
+                        }
+                        notice(data);
+                    }
                 }
+            } else {
+                logger.info(`无法匹配指定发送者`)
             }
         }
     })

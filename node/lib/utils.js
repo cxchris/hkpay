@@ -147,11 +147,12 @@ export const tojson = (input) => {
  * @param {string} key 
  * @param {string} egex 
  */
-export async function writeJson(id, key, egex) { 
+export async function writeJson(id, key, egex, poster = '') { 
     const config = {
         id,
         key,
-        egex
+        egex,
+        poster
     };
 
     const configFilePath = `./config/${id}.json`; // 请根据实际需求修改文件路径

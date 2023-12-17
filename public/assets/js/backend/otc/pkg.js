@@ -68,6 +68,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'password', title: '应用密码'},
                         {field: 'host', title: 'host'},
                         {field: 'port', title: '端口号'},
+                        {field: 'poster', title: '限制发送者邮箱'},
 
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, 
                             formatter: function (value, row, index) {

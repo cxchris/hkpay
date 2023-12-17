@@ -203,6 +203,7 @@ class pkg extends Backend
                                 'port' => $row['port'],
                                 'key' => $row['pkg'],
                                 'egex' => $row['regex'],
+                                'poster' => $row['poster'],
                             ];
                             $res = Pmapi::pm2()->start($cond);
                             // dump($res);
