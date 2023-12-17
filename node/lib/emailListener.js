@@ -140,7 +140,7 @@ export async function parseHtml(stream, _name) {
                         elementsWithKeyword.each((index, element) => {
                             // 获取包含关键字的元素所在的行的文字
                             textOfRow = $(element).text(); // 这里假设是在 <p> 元素中，你可以根据实际情况修改选择器
-                            logger.info(textOfRow)
+                            // logger.info(textOfRow)
                             if (textOfRow != '') {
                                 money = extractMoney(textOfRow,egex)
                                 // console.log(money)

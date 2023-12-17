@@ -5,8 +5,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 
-// const url = 'https://onepayhk.com/api/upnotice/callback';
-const url = 'http://127.0.0.1:88/api/upnotice/callback';
+const url = 'https://onepayhk.com/api/upnotice/callback';
+// const url = 'http://127.0.0.1:88/api/upnotice/callback';
 const key = 'B3iYKkRHlmUanQGaNMIJziWOkNN9dECQQD';
 
 /**
