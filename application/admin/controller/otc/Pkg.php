@@ -9,8 +9,6 @@ use fast\Sign;
 use fast\Http;
 use think\Log;
 use app\common\model\Bank;
-use fast\Pmapi;
-
 /**
  * 可用銀行包管理
  *
@@ -89,28 +87,11 @@ class pkg extends Backend
                 ->paginate($limit);
             // echo $this->model->getLastsql();echo '<br>';echo '<br>';exit;
 
-            $arr = Pmapi::pm2()->info();
             // dump($arr);
             // exit;
             $items = $list->items();
             foreach ($items as $k => $v) {
                 $items[$k]['create_time'] = datevtime($v['create_time']);
-
-                if($v['notice_type'] == Bank::MAIL_TYPE){
-                    //获取状态
-                    $matchingArr = array_filter($arr, function($row) use ($v) {
-                        return $row["name"] == $v["id"] && $row['status'] == 'online';
-                    });
-                    // dump($res);
-                    // exit;
-                    if (!empty($matchingArr)) {
-                        $status = 1;
-                    }else{
-                        $status = 0;
-                    }
-                    $model->where('id',$v['id'])->update(['status'=>$status]);
-                    $v['status'] = $status;
-                }
             }
             // dump($rate);
             // echo $this->model->getLastsql();exit;
@@ -185,36 +166,6 @@ class pkg extends Backend
                     if ($result === false) {
                         exception($row->getError());
                     }
-
-                    //修改脚本状态
-                    if($params['notice_type'] == bank::MAIL_TYPE){
-                        if($params['status'] == 0){
-                            $cond = [
-                                'id' => $row['id'],
-                            ];
-                            $res = Pmapi::pm2()->stop($cond);
-                            $result = $row->save(['status'=>0]);
-                        }else{
-                            $cond = [
-                                'id' => $row['id'],
-                                'user' => $row['email'],
-                                'password' => $row['password'],
-                                'host' => $row['host'],
-                                'port' => $row['port'],
-                                'key' => $row['pkg'],
-                                'egex' => $row['regex'],
-                                'poster' => $row['poster'],
-                            ];
-                            $res = Pmapi::pm2()->start($cond);
-                            // dump($res);
-                            // exit;
-                            if($res){
-                                $result = $row->save(['status'=>1]);
-                            }else{
-                                $result = $row->save(['status'=>0]);
-                            }
-                        }
-                    }
                     
                     Db::commit();
                 } catch (\Exception $e) {
@@ -247,20 +198,11 @@ class pkg extends Backend
                 $notice_type = [];
                 foreach ($channelList as $k => $v) {
                     $deleteIds[] = $v->id;
-                    $notice_type[] = $v->notice_type;
                 }
                 if ($deleteIds) {
                     Db::startTrans();
                     try {
                         $this->model->destroy($deleteIds);
-
-                        if($notice_type[0] == bank::MAIL_TYPE){
-                            $cond = [
-                                'id' => $ids,
-                            ];
-                            $res = Pmapi::pm2()->stop($cond);
-                        }
-
                         Db::commit();
                     } catch (\Exception $e) {
                         Db::rollback();

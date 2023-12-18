@@ -61,14 +61,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             searchList: typelist
                         },
 
-                        {field: 'pkg', title: '包名'},
-                        {field: 'email', title: '邮箱'},
-                        {field: 'regex', title: '正则表达式',operate:false},
-                        {field: 'text', title: '例子'},
-                        {field: 'password', title: '应用密码'},
-                        {field: 'host', title: 'host'},
-                        {field: 'port', title: '端口号'},
-                        {field: 'poster', title: '限制发送者邮箱'},
+                        {field: 'pkg', title: '包名',operate:false},
+                        { field: 'text', title: '例子', operate: false },
+
+                        // {field: 'email', title: '邮箱',operate:false},
+                        // {field: 'regex', title: '正则表达式',operate:false},
+                        // {field: 'password', title: '应用密码',operate:false},
+                        // {field: 'host', title: 'host',operate:false},
+                        // {field: 'port', title: '端口号',operate:false},
+                        // {field: 'poster', title: '限制发送者邮箱',operate:false},
 
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, 
                             formatter: function (value, row, index) {

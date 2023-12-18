@@ -9,6 +9,8 @@ use fast\Sign;
 use fast\Http;
 use think\Log;
 use app\common\model\Bank as bankModel;
+use app\common\model\OtcList as OtcModel;
+use fast\Pmapi;
 
 /**
  * 轉數快
@@ -30,7 +32,7 @@ class Account extends Backend
     public function _initialize()
     {
         parent::_initialize();
-        $this->model = model('otc_list');
+        $this->model = new OtcModel();
 
         $collectionList = model('channel_list')->where(['type'=>1])->select();
 
@@ -41,7 +43,7 @@ class Account extends Backend
 
         //获取银行列表
         $banklistName = [0 => __('None')];
-        $banklist = model('bank')->where('status',1)->select();
+        $banklist = model('bank')->select();
         foreach ($banklist as $v) {
             $banklistName[$v['id']] = $v['name'].'-'.bankModel::NoticeType[$v['notice_type']];
         }
@@ -75,7 +77,7 @@ class Account extends Backend
             // dump($op);exit;
             //组装搜索
             $timewhere = $statuswhere = $groupwhere = [];
-            $field = 'a.*,b.channel_name,c.name as pkg_name';
+            $field = 'a.*,b.channel_name,c.name as pkg_name,c.notice_type';
             if (isset($filter['create_time'])) {
                 $timearr = explode(' - ',$filter['create_time']);
                 // $model->where('a.create_time','between',[strtotime($timearr[0]),strtotime($timearr[1])]);
@@ -103,7 +105,7 @@ class Account extends Backend
                 ->where($timewhere)
                 ->where($statuswhere)
                 ->where($where)
-                ->where('a.type',$this->type)
+                // ->where('a.type',$this->type)
                 ->join('channel_list b','a.channel_id = b.id','LEFT')
                 ->join('bank c','a.pkg = c.id','LEFT')
                 ->field($field)
@@ -111,10 +113,29 @@ class Account extends Backend
                 ->paginate($limit);
             // echo $this->model->getLastsql();echo '<br>';echo '<br>';exit;
 
-
+            $arr = Pmapi::pm2()->info();
             $items = $list->items();
             foreach ($items as $k => $v) {
                 $items[$k]['create_time'] = datevtime($v['create_time']);
+                $pkgbank = $v['pkg_name'].'-'.bankModel::NoticeType[$v['notice_type']];
+                $items[$k]['pkgbank'] = $pkgbank;
+
+
+                if($v['notice_type'] == bankModel::MAIL_TYPE){
+                    //获取状态
+                    $matchingArr = array_filter($arr, function($row) use ($v) {
+                        return $row["name"] == $v["id"] && $row['status'] == 'online';
+                    });
+                    // dump($res);
+                    // exit;
+                    if (!empty($matchingArr)) {
+                        $status = 1;
+                    }else{
+                        $status = 0;
+                    }
+                    $model->where('id',$v['id'])->update(['status'=>$status]);
+                    $v['status'] = $status;
+                }
 
             }
 
@@ -151,8 +172,9 @@ class Account extends Backend
                 Db::startTrans();
                 try {
                     unset($params['checksum']);
+                    $params['status'] = 0;
                     //默认为代收
-                    $params['type'] = $this->type;
+                    // $params['type'] = $this->type;
                     $result = $this->model->validate('Otc.add')->save($params);
                     if ($result === false) {
                         exception($this->model->getError());
@@ -193,6 +215,38 @@ class Account extends Backend
                     if ($result === false) {
                         exception($row->getError());
                     }
+                    $bank = bankModel::where('id',$row->pkg)->find();
+                    //修改脚本状态
+                    if($bank['notice_type'] == bankModel::MAIL_TYPE){
+                        if($params['status'] == 0){
+                            $cond = [
+                                'id' => $row['id'],
+                            ];
+                            $res = Pmapi::pm2()->stop($cond);
+                            $result = $row->save(['status'=>0]);
+                        }else{
+                            $cond = [
+                                'id' => $row['id'],
+                                'user' => $row['email'],
+                                'password' => $row['password'],
+                                'host' => $row['host'],
+                                'port' => $row['port'],
+                                'key' => $row['keyword'],
+                                'egex' => $row['regex'],
+                                'poster' => $row['poster'],
+                            ];
+                            // dump($cond);
+                            // exit;
+                            $res = Pmapi::pm2()->start($cond);
+                            // dump($res);
+                            // exit;
+                            if($res){
+                                $result = $row->save(['status'=>1]);
+                            }else{
+                                $result = $row->save(['status'=>0]);
+                            }
+                        }
+                    }
 
                     Db::commit();
                 } catch (\Exception $e) {
@@ -220,15 +274,25 @@ class Account extends Backend
         if ($ids) {
             // 查询，直接删除
             $channelList = $this->model->where('id', 'in', $ids)->select();
+            $notice_type = [];
             if ($channelList) {
                 $deleteIds = [];
                 foreach ($channelList as $k => $v) {
                     $deleteIds[] = $v->id;
+                    $bank = bankModel::where('id',$v->pkg)->find();
+                    $notice_type[] = $bank->notice_type;
                 }
                 if ($deleteIds) {
                     Db::startTrans();
                     try {
                         $this->model->destroy($deleteIds);
+
+                        if($notice_type[0] == bankModel::MAIL_TYPE){
+                            $cond = [
+                                'id' => $ids,
+                            ];
+                            $res = Pmapi::pm2()->stop($cond);
+                        }
                         Db::commit();
                     } catch (\Exception $e) {
                         Db::rollback();
@@ -241,5 +305,10 @@ class Account extends Backend
         }
         $this->error(__('You have no permission'));
     }
-    
+
+    public function channelList(){
+        $res = OtcModel::ChannelType;
+        // dump($res);exit;
+        return json($res);
+    }
 }

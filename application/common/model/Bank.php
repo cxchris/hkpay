@@ -29,6 +29,11 @@ class Bank extends Model
         2 => '邮箱通知',
         3 => '短信通知',
     ];
+    /**
+     * 手机通知 类型
+     * @var int
+     */
+    const MOBILE_TYPE = 1;
 
     /**
      * 邮箱通知 类型

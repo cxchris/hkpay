@@ -19,6 +19,25 @@ class OtcList extends Model
     protected $create_time = 'create_time';
     protected $updateTime = '';
 
+    /**
+     * 1-转速快，2-银行卡
+     * @var array
+     */
+    const ChannelType = [
+        1 => '转速快',
+        2 => '银行卡',
+    ];
+    /**
+     * 手机通知 类型
+     * @var int
+     */
+    const ZSK_TYPE = 1;
+
+    /**
+     * 邮箱通知 类型
+     * @var int
+     */
+    const BANK_TYPE = 2;
 
     /*
     * 获取统计数据

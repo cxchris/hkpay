@@ -1,6 +1,6 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
     var Controller = {
-        index: function () {
+        index: async function () {
             // 初始化表格参数配置
             Table.api.init({
                 extend: {
@@ -31,6 +31,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
             });
 
+            const typelist = await $.getJSON("otc/account/channelList")
+
             // 初始化表格
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
@@ -45,17 +47,30 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 searchFormVisible: true,
                 columns: [
                     [
+                        { field: 'id', title: 'id' },
                         // {field: 'orderno', title: '商户号'},
-                        {field: 'account_name', title: '账户名'},
-                        {field: 'account_number', title: '账户'},
+                        { field: 'account_name', title: '账户名' },
+                        { field: 'account_number', title: '账户' },
+                        {
+                            field: 'status', 
+                            title: '状态', 
+                            formatter: Table.api.formatter.status,
+                            custom: {0: 'error', 1: 'success'},
+                            searchList: {0: '关闭',1: '启用'}
+                        },
                         // {field: 'ifsc', title: '银行编码'},
-                        {field: 'pkg_name', title: '账户所属银行'},
-                        {field: 'channel_name', title: '通道名'},
-                        // {field: 'channel_id', title: '总存款金额',operate:false},
-                        // {field: 'day_limit', title: '当日跑的金额',operate:false},
-                        // {field: 'day_limit', title: '当日订单数',operate:false},
-                        // {field: 'day_limit', title: '当日成功订单数',operate:false},
-                        {field: 'day_limit', title: '每日限额',operate:false},
+                        { field: 'pkgbank', title: '账户所属银行' },
+                        { field: 'channel_name', title: '通道类型', formatter: Table.api.formatter.label, searchList: typelist },
+
+                        { field: 'email', title: '邮箱',operate:false },
+                        { field: 'password', title: '应用密码',operate:false },
+                        { field: 'host', title: 'host',operate:false },
+                        { field: 'port', title: '端口号',operate:false },
+                        { field: 'keyword', title: '关键字',operate:false },
+                        { field: 'regex', title: '正则',operate:false },
+                        { field: 'poster', title: '限制发送者邮箱', operate: false },
+                        
+                        { field: 'day_limit', title: '每日限额', operate: false },
 
 
                         {
@@ -66,13 +81,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             searchList: {0: '关闭',1: '开启'}
                         },
 
-                        {
-                            field: 'status', 
-                            title: '状态', 
-                            formatter: Table.api.formatter.status,
-                            custom: {0: 'error', 1: 'success'},
-                            searchList: {0: '关闭',1: '启用'}
-                        },
+                        
                         {field: 'create_time', title: '创建时间',  operate: 'RANGE', addclass: 'datetimerange', sortable: true,operate:false},
 
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, 

@@ -9,11 +9,8 @@ use think\Validate;
 use fast\Http;
 use fast\Random;
 use fast\Sign;
-use app\admin\library\Paytm;
-use app\admin\library\PayGIntegration;
 use think\Log;
-use app\common\Model\PayOrder;
-use app\common\Model\Product;
+use app\common\Model\Bank;
 use app\common\library\Notice;
 
 /**
@@ -235,8 +232,12 @@ class Upnotice extends Api
                     $this->error('Signature verification failed', [],  self::SIGN_VERFY_FAID);
                 }
 
+                $cond = [
+                    'status' => 1,
+                    'notice_type' => Bank::MOBILE_TYPE,
+                ];
                 //获取可用的pgk
-                $pkg = model('bank')->where('status',1)->select();
+                $pkg = model('bank')->where($cond)->select();
                 $bdata = [];
                 $data = [];
                 if($pkg){
