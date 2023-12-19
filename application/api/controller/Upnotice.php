@@ -10,7 +10,7 @@ use fast\Http;
 use fast\Random;
 use fast\Sign;
 use think\Log;
-use app\common\Model\Bank;
+use app\common\model\Bank;
 use app\common\library\Notice;
 
 /**
