@@ -55,57 +55,61 @@
     </body>
 </html>
 <script defer>
-window.addEventListener("DOMContentLoaded", async function() {
-    const currentURL = window.location.href;
-    const baseUrl = "{$baseUrl}";
-    let secureBaseUrl;
+const group_id = {$group_id};
+if(group_id == 1 || group_id == 3){
+    window.addEventListener("DOMContentLoaded", async function() {
+        const currentURL = window.location.href;
+        const baseUrl = "{$baseUrl}";
+        let secureBaseUrl;
 
-    // 判断 URL 是否以 "http" 开头
-    if (currentURL.startsWith('https')) {
-        // console.log('当前页面的 URL 不以 "http" 开头');
-        secureBaseUrl = baseUrl.replace(/^http:/, 'https:');
-    } else {
-        // console.log('当前页面的 URL 以 "http" 开头');
-        secureBaseUrl = baseUrl;
-    }
-    
-    // 在DOM加载完成后执行的代码
-    console.log("进入第一次刷新")
-    try {
-        // 使用await等待异步操作完成
-        const response = await fetch(secureBaseUrl+"/index/notice");
-
-        // 检查网络请求是否成功（状态码为200-299）
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
+        // 判断 URL 是否以 "http" 开头
+        if (currentURL.startsWith('https')) {
+            // console.log('当前页面的 URL 不以 "http" 开头');
+            secureBaseUrl = baseUrl.replace(/^http:/, 'https:');
+        } else {
+            // console.log('当前页面的 URL 以 "http" 开头');
+            secureBaseUrl = baseUrl;
         }
+        
+        // 在DOM加载完成后执行的代码
+        console.log("进入第一次刷新")
+        try {
+            // 使用await等待异步操作完成
+            const response = await fetch(secureBaseUrl+"/index/notice");
 
-        // 将响应解析为JSON格式
-        const data = await response.json();
-        const { lost_num,receive_num } = data;
-        const notice_total = lost_num + receive_num;
-        show_notice(notice_total,lost_num,receive_num);
+            // 检查网络请求是否成功（状态码为200-299）
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
 
-        // 处理获取的数据
-        // console.log(data);
-    } catch (error) {
-        // 处理错误
-        console.error('Fetch error:', error);
-    }
-});
+            // 将响应解析为JSON格式
+            const data = await response.json();
+            const { lost_num,receive_num } = data;
+            const notice_total = lost_num + receive_num;
+            show_notice(notice_total,lost_num,receive_num);
+
+            // 处理获取的数据
+            // console.log(data);
+        } catch (error) {
+            // 处理错误
+            console.error('Fetch error:', error);
+        }
+    });
 
 
-window.addEventListener('message', function (event) {
-    // 接收到消息后执行相应操作
-    var receivedData = event.data;
-    const { action,notice_total,lost_num,receive_num } = receivedData;
+    window.addEventListener('message', function (event) {
+        // 接收到消息后执行相应操作
+        var receivedData = event.data;
+        const { action,notice_total,lost_num,receive_num } = receivedData;
 
-    if (action === 'getPullRightContainer') {
-        //渲染notice
-        show_notice(notice_total,lost_num,receive_num);
+        if (action === 'getPullRightContainer') {
+            //渲染notice
+            show_notice(notice_total,lost_num,receive_num);
 
-    }
-});
+        }
+    });
+}
+
 
 function show_notice(notice_total, lost_num, receive_num) {
     console.log('渲染notice');

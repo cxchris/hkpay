@@ -25,36 +25,6 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="email" class="control-label col-xs-12 col-sm-2">邮箱:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input type="text" class="form-control" id="email" name="row[email]" placeholder="" value="" data-rule="" />
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="password" class="control-label col-xs-12 col-sm-2">应用密码:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input type="text" class="form-control" id="password" name="row[password]" placeholder="" value="" data-rule="" />
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="host" class="control-label col-xs-12 col-sm-2">host:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input type="text" class="form-control" id="host" name="row[host]" placeholder="" value="" data-rule="" />
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="port" class="control-label col-xs-12 col-sm-2">port:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input type="text" class="form-control" id="port" name="row[port]" placeholder="" value="" data-rule="" />
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="poster" class="control-label col-xs-12 col-sm-2">限制发送者邮箱:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input type="text" class="form-control" id="poster" name="row[poster]" placeholder="" value="" data-rule="" />
-        </div>
-    </div>
-    <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">收款类型:</label>
         <div class="col-xs-12 col-sm-8">
             {:build_select('row[notice_type]', $noticeList, null, ['class'=>'form-control selectpicker', 'data-rule'=>'required'])}

@@ -63,6 +63,7 @@ class Index extends Backend
 
         // 将基础URL传递给前端模板
         $this->view->assign('baseUrl', $baseUrl);
+        $this->view->assign('group_id', $this->group_id);
 
         $this->assignconfig('cookie', ['prefix' => config('cookie.prefix')]);
         $this->view->assign('menulist', $menulist);
