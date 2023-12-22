@@ -114,24 +114,20 @@ class Account extends Backend
             // echo $this->model->getLastsql();echo '<br>';echo '<br>';exit;
 
             $arr = Pmapi::pm2()->info();
-            dump($arr);
             // exit;
             $items = $list->items();
             foreach ($items as $k => $v) {
                 $items[$k]['create_time'] = datevtime($v['create_time']);
-                $pkgbank = $v['pkg_name'].'-'.bankModel::NoticeType[$v['notice_type']];
-                    dump($pkgbank);
-                    exit;
-                $items[$k]['pkgbank'] = $pkgbank;
-
+                if(isset($v['pkg_name'])){
+                    $pkgbank = $v['pkg_name'].'-'.bankModel::NoticeType[$v['notice_type']];
+                    $items[$k]['pkgbank'] = $pkgbank;
+                }
 
                 if($v['notice_type'] == bankModel::MAIL_TYPE){
                     //获取状态
                     $matchingArr = array_filter($arr, function($row) use ($v) {
                         return $row["name"] == $v["id"] && $row['status'] == 'online';
                     });
-                    dump($matchingArr);
-                    exit;
                     // exit;
                     if (!empty($matchingArr)) {
                         $status = 1;
@@ -144,7 +140,6 @@ class Account extends Backend
 
             }
 
-            exit;
             // dump($rate);
             // echo $this->model->getLastsql();exit;
 
