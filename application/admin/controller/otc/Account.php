@@ -114,7 +114,7 @@ class Account extends Backend
             // echo $this->model->getLastsql();echo '<br>';echo '<br>';exit;
 
             $arr = Pmapi::pm2()->info();
-            // dump($arr);
+            dump($arr);
             // exit;
             $items = $list->items();
             foreach ($items as $k => $v) {
@@ -129,6 +129,7 @@ class Account extends Backend
                         return $row["name"] == $v["id"] && $row['status'] == 'online';
                     });
                     dump($matchingArr);
+                    exit;
                     // exit;
                     if (!empty($matchingArr)) {
                         $status = 1;
