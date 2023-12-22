@@ -119,9 +119,9 @@ class Account extends Backend
             $items = $list->items();
             foreach ($items as $k => $v) {
                 $items[$k]['create_time'] = datevtime($v['create_time']);
-                    dump($items);
-                    exit;
                 $pkgbank = $v['pkg_name'].'-'.bankModel::NoticeType[$v['notice_type']];
+                    dump($pkgbank);
+                    exit;
                 $items[$k]['pkgbank'] = $pkgbank;
 
 
