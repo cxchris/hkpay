@@ -114,6 +114,8 @@ class Account extends Backend
             // echo $this->model->getLastsql();echo '<br>';echo '<br>';exit;
 
             $arr = Pmapi::pm2()->info();
+            dump($arr);
+            exit;
             $items = $list->items();
             foreach ($items as $k => $v) {
                 $items[$k]['create_time'] = datevtime($v['create_time']);
