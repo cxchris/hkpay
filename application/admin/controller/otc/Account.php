@@ -123,6 +123,8 @@ class Account extends Backend
                 $items[$k]['pkgbank'] = $pkgbank;
 
 
+                    dump($items);
+                    exit;
                 if($v['notice_type'] == bankModel::MAIL_TYPE){
                     //获取状态
                     $matchingArr = array_filter($arr, function($row) use ($v) {
