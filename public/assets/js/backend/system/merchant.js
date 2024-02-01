@@ -97,7 +97,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 operate: {
                     'click .btn-googleVaild': function (e, value,row,index) {
                         var that = this;
-                        var table = $(that).closest('table'); 
+                        var table = $(that).closest('table');
                         var options = table.bootstrapTable('getOptions');
                         var load = Layer.prompt({title: 'Google Checksum', shadeClose: true}, function (text, index) {
                             if($.trim(text)==''){
@@ -133,7 +133,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     },
                     'click .btn-googleReset': function (e, value,row,index) {
                         var that = this;
-                        var table = $(that).closest('table'); 
+                        var table = $(that).closest('table');
                         var options = table.bootstrapTable('getOptions');
                         var load = Layer.prompt({title: 'Google Checksum', shadeClose: true}, function (text, index) {
                             if($.trim(text)==''){
@@ -169,7 +169,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     },
                     'click .btn-passReset': function (e, value,row,index) {
                         var that = this;
-                        var table = $(that).closest('table'); 
+                        var table = $(that).closest('table');
                         var options = table.bootstrapTable('getOptions');
                         var load = Layer.prompt({title: 'Google Checksum', shadeClose: true}, function (text, index) {
                             if($.trim(text)==''){

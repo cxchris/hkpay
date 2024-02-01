@@ -14,12 +14,12 @@ class Notice
      * 掉单通知URL
      * @var string
      */
-    const notice_url = '/notice';
+    const pay_notice_url = '/notice/pay';
     /**
      * 接收代付订单通知URL
      * @var string
      */
-    const callWeb_url = '/widthdraw/callWeb';
+    const withdraw_notice_url = '/notice/withdraw';
     
     /**
      * Summary of send_lost
@@ -32,14 +32,13 @@ class Notice
         try {
             $arrData  = array(
                 'amount' => $params['amount']??'',
-                'content' => $params['content']??'',
+                'orderno' => $params['orderno']??'',
                 'time' => $params['time']??'',
-                'pkg' => $params['pkg']??'',
             );
             $sign = Sign::getSign($arrData,Env::get('notice.key'));
             $arrData['sign'] = $sign;
 
-            $url = Env::get('notice.url').self::notice_url;
+            $url = Env::get('notice.url').self::pay_notice_url;
 
             // dump($url);
             // dump($arrData);
@@ -84,7 +83,7 @@ class Notice
             $sign = Sign::getSign($arrData,Env::get('notice.key'));
             $arrData['sign'] = $sign;
 
-            $url = Env::get('notice.url').self::callWeb_url;
+            $url = Env::get('notice.url').self::withdraw_notice_url;
 
             // dump($url);
             // dump($arrData);
