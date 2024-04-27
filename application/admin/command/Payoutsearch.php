@@ -61,7 +61,7 @@ class Payoutsearch extends Command
             // $channel = Db::name('channel_list')->where(array('id'=>$row['channel_id']))->find();
             
             //查询三方状态
-            $status = $model->get_order_detail($row);
+            // $status = $model->get_order_detail($row);
         }
         
     }

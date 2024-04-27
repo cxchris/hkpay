@@ -10,40 +10,14 @@ use fast\Http;
 use fast\Random;
 use fast\Sign;
 use app\admin\library\CommonPayment;
-use app\admin\library\Otcpay;
-
-/*use app\admin\library\Paytm;
-use app\admin\library\PayGIntegration;
-use app\admin\library\Otcpay;
-use app\admin\library\Cashfree;
-use app\admin\library\Kirin;
-use app\admin\library\Fastpay;
-use app\admin\library\Bzpay;
-use app\admin\library\Dspay;
-use app\admin\library\Wepay;
-use app\admin\library\Wowpay;
-use app\admin\library\WorldPay;
-use app\admin\library\GlobalPay;
-use app\admin\library\Uzpay;
-use app\admin\library\Ndspay;
-use app\admin\library\Nndspay;
-use app\admin\library\Xdpay;*/
-
+use app\common\library\PayHelper;
 use think\Log;
-use app\common\Model\PayOrder;
-use app\common\Model\Product;
-use think\Env;
 
 /**
  * 支付api
  */
 class Pay extends Api
 {
-
-    //如果$noNeedLogin为空表示所有接口都需要登录才能请求
-    //如果$noNeedRight为空表示所有接口都需要验证权限才能请求
-    //如果接口已经设置无需登录,那也就无需鉴权了
-    //
     // 无需登录的接口,*表示全部
     protected $noNeedLogin = ['*'];
     // 无需鉴权的接口,*表示全部
@@ -58,16 +32,48 @@ class Pay extends Api
     protected $akey = 'qwerty';
     protected $t_callbackUrl = 'https://ydapppay.com/ydpay/api/Pay/callback'; //上游通知地址
     protected $callbackUrl = 'https://www.google.com';//跳转给用户的前端页面
+    protected $PayHelper;
 
     public function _initialize()
     {
         parent::_initialize();
+        $this->PayHelper = new PayHelper($this->request);
+    }
+
+    public function order(){
+        if ($this->request->isPost()) {
+            $params = $this->request->post();
+            if ($params) {
+                Log::record('代收请求:'.json_encode($params),'notice');
+                //1.数据验证
+                try {
+                    [$merchant,$channel] = $this->PayHelper->validPayRequest($params);
+                } catch (\Exception $e) {
+                    $this->error($e->getMessage(),[],$e->getCode());
+                }
+                dump($merchant);
+                exit;
+                //2.获取三方支付链接
+                try {
+                    $data = $this->PayHelper->getApiLink($params,$merchant,$channel,$sub_channel);
+                } catch (\Exception $e) {
+                    $this->error($e->getMessage(),[],$e->getCode());
+                }
+
+                Log::record('代收返回:'.json_encode($data),'notice');
+                $this->success('success',$data,200);
+            }else{
+                $this->error('Parameter can not be empty', [],  parent::PARMETR_NOT_EMPTY);
+            }
+        }else{
+            $this->error('only post', [],  parent::ONLY_POST);
+        }
     }
 
     /**
      * 创建支付订单获取支付链接
      */
-    public function order()
+    public function order1()
     {
         if ($this->request->isPost()) {
             $params = $this->request->post();
@@ -697,12 +703,6 @@ class Pay extends Api
     {
         dump(CommonPayment::getStaticValue($channelType = 'wepay', $type = 'getAllowIp'));
         exit;
-        $channel = \app\admin\model\ChannelList::where('id', 16)->find();
-        // $cond['orderno'] = '72e33b0063bf451294b78d220d561d13';
-        $orderinfo = Db::name('pay_order')->where('id',110)->find();
-        $orderinfo['eshopno'] = Random::generateRandom();
-        //$res = CommonPayment::paymethod($orderinfo,$channel);
-        dump($res);exit;
     }
 
     /**

@@ -2,6 +2,8 @@
 
 namespace fast;
 
+use think\Env;
+
 /**
  * 签名验证
  */
@@ -44,6 +46,9 @@ class Sign
      */
     public static function verifySign($params,$key = '',$isdecode = true,$isstrtoupper = true)
     {
+        if(Env::get('app.is_sign') == false) {
+            return true;
+        }
         //传入的签名
         $sign = $params['sign'];
         unset($params['sign']);
