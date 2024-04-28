@@ -147,13 +147,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 //当表格数据加载完成时
                 table.on('load-success.bs.table', function (e, json) {
                     //上层框架去操作红点逻辑
-                    const data = {
-                        action: 'getPullRightContainer',
-                        notice_total: json.extend.notice_total,
-                        lost_num: json.extend.lost_num,
-                        receive_num: json.extend.receive_num,
-                    }
-                    window.parent.postMessage(data, '*');
+                    // const data = {
+                    //     action: 'getPullRightContainer',
+                    //     notice_total: json.extend.notice_total,
+                    //     lost_num: json.extend.lost_num,
+                    //     receive_num: json.extend.receive_num,
+                    // }
+                    // window.parent.postMessage(data, '*');
 
                     $("#money").text(json.extend.money);
                     $("#total").text(json.extend.total);

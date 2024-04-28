@@ -6,7 +6,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
                 //判断权限，只有管理员和客服可以
                 if (Config.admin.group_id == 1 || Config.admin.group_id == 3) {
                     // 连接到WebSocket服务器
-                    _this.startWebsocket();
+                    // _this.startWebsocket();
                 }
                 
             });
